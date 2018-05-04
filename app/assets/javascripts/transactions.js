@@ -10,34 +10,32 @@ $(function() {
 
     var transactionDetail = $(this.parentElement).data().detail;
     var transactions = $("input[data-detail=" + transactionDetail + "]");
+    var transactionIds = transactions.map(function(i,t) {
+      return $(t.parentElement).data().id
+    }).toArray();
 
-    transactions.each(function() {
-      var form =  $(this.parentElement)
-      var transactionId = form.data().id;
-      this.value = newCategory;
-
-      $.ajax({
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader('X-CSRF-Token', token)
-        },
-        dataType: 'json',
-        data: {
-          "transaction" : {
-            "id": transactionId,
-            "detail": transactionDetail,
-            "category": newCategory
-          }
-        },
-        type: 'POST',
-        url: '/transactions/edit',
-        success: function(data) {
-        },
-        complete: function(data) {
-          if (data.status == 200) {
-           form.hide();
-          }
-        },
-      });
-    })
+    $.ajax({
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('X-CSRF-Token', token)
+      },
+      dataType: 'json',
+      data: {
+        "transaction" : {
+          "ids": transactionIds,
+          "detail": transactionDetail,
+          "category": newCategory
+        }
+      },
+      type: 'POST',
+      url: '/transactions/edit',
+      complete: function(data) {
+        if (data.status == 200) {
+         $("form[data-detail=" + transactionDetail + "]").hide()
+        } else {
+          alert('something went wrong')
+          console.log(data)
+        }
+      },
+    });
   }));
 });
