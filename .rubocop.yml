@@ -69,3 +69,5 @@ Rails/UnknownEnv:
     - development
     - test
     - aws_uat
+Style/Documentation:
+  Enabled: false
