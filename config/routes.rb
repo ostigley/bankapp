@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   get '/transactions/new', to: 'transactions#new'
   post '/transactions/upload', to: 'transactions#upload'
   get '/transactions/edit/:ids', to: 'transactions#bulk_edit'
+  post '/transactions/edit', to: 'transactions#update'
 end
