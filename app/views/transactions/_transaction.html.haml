@@ -5,6 +5,6 @@
   = transaction.amount
   = label_tag(:category, 'Select a category or create one')
   = select_tag(:category, category_detail_options)
-  = text_field_tag(:new_category)
-  = submit_tag(:Update, class: 'submit')
+  = text_field_tag(:new_category, nil, 'data-detail' => transaction.detail.parameterize)
+  = submit_tag('Add New', class: 'submit', id: 'oliver')
 

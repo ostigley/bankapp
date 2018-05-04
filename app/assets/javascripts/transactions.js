@@ -1,8 +1,17 @@
-// Place all the behaviors and hooks related to the matching controller here.
-// All this logic will automatically be available in application.js.
-
 $(function() {
-  $('input.submit').on('click', (function(e,x) {
-    debugger
-  }))
-})
+  $('input.submit').on('click', (function(e) {
+    e.preventDefault();
+    var newCategory = $(this.parentElement).serializeArray()
+                        .find(function(field) {
+                          return field.name === 'new_category'
+                        })
+                      .value;
+
+    var transactionDetail = $(this.parentElement).data().detail;
+    var transactions = $("input[data-detail=" + transactionDetail + "]");
+
+    transactions.each(function() {
+      this.value = newCategory;
+    })
+  }));
+});
