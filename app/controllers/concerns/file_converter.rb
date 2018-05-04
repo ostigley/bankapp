@@ -3,13 +3,15 @@ module FileConverter
   require 'csv'
 
   def save_entries
+    @transactions = []
     csv_text = @file.read
     csv = CSV.parse(csv_text, :headers => true)
-
     csv.each do |row|
       h = convert_hash_keys(row.to_hash)
-      Transaction.create!({transaction_date: h[:transaction_date], detail: h[:details], amount: h[:amount]})
+      @transactions << Transaction.create!({transaction_date: h[:transaction_date], detail: h[:details], amount: h[:amount]})
     end
+
+    @transactions
   end
 
   private

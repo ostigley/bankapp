@@ -1,4 +1,4 @@
-= form_tag('/transactions', multipart: true, method: "post" ) do
+= form_tag('/transactions/upload', multipart: true, method: "post" ) do
   = label_tag(:file, "Select CSV file to upload")
   = file_field_tag(:file)
   = submit_tag("Upload File")
