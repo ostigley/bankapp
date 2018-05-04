@@ -1,40 +1,45 @@
 # frozen_string_literal: true
 
 class TransactionsController < ApplicationController
-  include FileConverter
+  include TransactionsFileConverter
+  include CategoryDetailLookup
+
+  before_action :all_categories, only: :bulk_edit
 
   def new
   end
 
   def upload
     @file = file_params
-    @transactions = save_entries
-    generate_categories
+    @transactions = create_all_transactions
+    add_category_to_transactions
+
     redirect_to action: 'bulk_edit', ids: @transactions.map(&:id)
   end
 
   def bulk_edit
-    @transactions = Transaction.find(ids).select {|t| t.category.blank? }
-    @category_details = CategoryDetail.all
+    transaction_ids = params[:ids].split '/'
+    @transactions = Transaction.find(transaction_ids).select {|t| t.category.blank? }
+
     render :edit
   end
 
   def update
     respond_to do |format|
       format.json  do
-        @transaction = Transaction.find_by_id(transaction_params[:id])
-        @category_detail = CategoryDetail.find_or_create_by!(detail: transaction_params[:detail]) do |cd|
-          cd.category = transaction_params[:category]
+        transaction_params[:ids].each do |id|
+          @transaction = Transaction.find_by_id(id)
+
+          @transaction.category = find_or_create_category_detail(transaction_params)
+
+          @transaction.save!
         end
 
-        @transaction.category = @category_detail.category
-        if @transaction.save!
-          return head :ok
-        end
+        return head :ok
       end
     end
 
-  rescue
+  rescue StandardError => e
     binding.pry
   end
 
@@ -45,17 +50,6 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_params
-    params.require(:transaction).permit(:id, :detail, :category)
-  end
-
-  def ids
-    params[:ids].split '/'
-  end
-
-  def generate_categories
-    @transactions.each do |transaction|
-      category = CategoryDetail.find_by(detail: transaction.detail)
-      transaction.update_attribute(:category, category&.category)
-    end
+    params.require(:transaction).permit(:detail, :category, :ids => [])
   end
 end

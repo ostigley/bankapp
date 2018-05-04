@@ -1,8 +1,8 @@
-module FileConverter
+module TransactionsFileConverter
   extend ActiveSupport::Concern
   require 'csv'
 
-  def save_entries
+  def create_all_transactions
     @transactions = []
     csv_text = @file.read
     csv = CSV.parse(csv_text, :headers => true)
