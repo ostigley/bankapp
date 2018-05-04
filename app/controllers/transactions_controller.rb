@@ -9,6 +9,7 @@ class TransactionsController < ApplicationController
   def upload
     @file = tranaction_params
     @transactions = save_entries
+    generate_categories
     redirect_to action: 'bulk_edit', ids: @transactions.map(&:id)
   end
 
@@ -26,5 +27,12 @@ class TransactionsController < ApplicationController
 
   def ids
     params[:ids].split '/'
+  end
+
+  def generate_categories
+    @transactions.each do |transaction|
+      category = CategoryDetail.find_or_create_by(detail: transaction.detail)
+      transaction.update_attribute(:category, category.category)
+    end
   end
 end
