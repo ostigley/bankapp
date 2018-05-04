@@ -1,0 +1,10 @@
+= form_tag('/transactions/build_update', remote: true, 'data-detail' => transaction.detail.parameterize) do
+  %label Detail:
+  = transaction.detail
+  %Amount
+  = transaction.amount
+  = label_tag(:category, 'Select a category or create one')
+  = select_tag(:category, category_detail_options)
+  = text_field_tag(:new_category)
+  = submit_tag(:Update, class: 'submit')
+
