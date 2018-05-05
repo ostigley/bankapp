@@ -40,7 +40,7 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_params
-    params.require(:transaction).permit(:detail, :category, ids: [])
+    params.require(:transactions).permit(:detail, :category, ids: [])
   end
 
   def update_transactions

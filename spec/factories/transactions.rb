@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :transaction do
     transaction_date 2.days.ago
-    detail 'macdonalds'
+    detail Faker::Company.name.parameterize
     category nil
     amount 0 - 100.00
 

@@ -8,8 +8,8 @@ module CategoryDetailLookup
   end
 
   def find_or_create_category_detail(transaction)
-    category = CategoryDetail.find_or_create_by!(detail: transaction[:detail]) do |cd|
-      cd.category = transaction[:category]
+    category = CategoryDetail.find_or_create_by!(detail: transaction[:detail].parameterize) do |cd|
+      cd.category = transaction[:category].parameterize
     end
 
     category.category
@@ -17,7 +17,7 @@ module CategoryDetailLookup
 
   def add_category_to_transactions
     @transactions.each do |transaction|
-      return transaction.update_attribute(:category, 'Income') if transaction.amount.positive?
+      return transaction.update_attribute(:category, 'income') if transaction.amount.positive?
 
       category = CategoryDetail.find_by(detail: transaction.detail)
 

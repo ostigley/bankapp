@@ -32,7 +32,7 @@ $(function() {
       },
       dataType: 'json',
       data: {
-        "transaction" : {
+        "transactions" : {
           "ids": ids,
           "category": category,
           "detail": detail,

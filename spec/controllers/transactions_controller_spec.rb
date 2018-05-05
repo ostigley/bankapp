@@ -43,7 +43,7 @@ RSpec.describe TransactionsController, type: :controller do
 
       it 'adds category Income if amount is credit or positive' do
         post :upload, params: { file: @positive_debit_card_file }
-        expect(Transaction.first.category).to eq 'Income'
+        expect(Transaction.first.category).to eq 'income'
       end
 
       it 'parameterizes transaction details' do
@@ -105,7 +105,6 @@ RSpec.describe TransactionsController, type: :controller do
           expect(transaction).to be_a Transaction
         end
       end
-
 
       it 'parameterizes transaction details' do
         post :upload, params: { file: @positive_credit_card_file }
@@ -173,10 +172,32 @@ RSpec.describe TransactionsController, type: :controller do
     end
   end
 
-  describe 'bulk_update' do
-    before do
-      @positive_debit_card_file = fixture_file_upload('test_debit_card_positive_amounts.csv', 'text/csv')
-      @negative_debit_card_file = fixture_file_upload('test_debit_card_negative_amounts.csv', 'text/csv')
+  describe 'update' do
+    let(:detail) { 'Coffee is gooooo'.parameterize }
+    let(:new_category) { 'Eating out' }
+    let(:transactions_same_detail) { create_list(:transaction, 5, detail: detail) }
+
+    context 'new categories on transactions with the same detail' do
+      before do
+        post :update, params: { format: 'json',
+                                transactions: { ids: transactions_same_detail.map(&:id),
+                                                detail: detail,
+                                                category: new_category } }
+      end
+
+      it 'updates the transactions with the new category' do
+        transactions_same_detail.each(&:reload)
+
+        transactions_same_detail.each do |transaction|
+          expect(transaction.category).to eq new_category.parameterize
+        end
+      end
+
+      it 'creates a new category detail' do
+        expect(CategoryDetail.first.detail).to eq detail.parameterize
+        expect(CategoryDetail.first.category).to eq new_category.parameterize
+        expect(CategoryDetail.count).to eq 1
+      end
     end
   end
 end

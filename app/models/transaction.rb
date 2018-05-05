@@ -2,11 +2,10 @@
 
 class Transaction < ApplicationRecord
   validates :transaction_date, :amount, :detail, presence: true
-  validate :detail_is_parameterized
+  validate :fields_are_parameterized
 
-  def detail_is_parameterized
-    return true unless detail.parameterize != detail
-
-    errors.add(:detail, "Must be parameterized: #{detail}")
+  def fields_are_parameterized
+    parameterized?(detail)
+    parameterized?(category)
   end
 end
