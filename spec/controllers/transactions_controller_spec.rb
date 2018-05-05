@@ -124,4 +124,47 @@ RSpec.describe TransactionsController, type: :controller do
       end
     end
   end
+
+  describe 'bulk_edit' do
+    let(:transactions) { create_list(:transaction, 3) }
+    let!(:category_detail) { create(:category_detail) }
+
+    before do
+      get :bulk_edit, params: { ids: transactions.map(&:id) }
+    end
+
+    it 'assigns @transactions from ids in params' do
+      expect(assigns[:transactions]).to eq transactions
+    end
+
+    it 'assigns @category_details' do
+      expect(assigns[:category_details]).to eq CategoryDetail.all
+    end
+
+    it 'renders the edit template' do
+      expect(response).to render_template(:edit)
+    end
+
+    context 'transactions that already have categories assigned' do
+      let(:transaction_with_category) { create(:transaction, category: 'eating-out') }
+      let(:transaction_without_category) { create(:transaction) }
+
+      before do
+        get :bulk_edit, params: { ids: [ transaction_with_category.id, transaction_without_category.id ] }
+      end
+
+      it 'only assigns @transactions that have no category' do
+        expect(assigns[:transactions].include?(transaction_with_category)).to be false
+        expect(assigns[:transactions].include?(transaction_without_category)).to be true
+      end
+    end
+  end
+
+
+  describe 'bulk_update' do
+   before do
+      @positive_debit_card_file = fixture_file_upload('test_debit_card_positive_amounts.csv', 'text/csv')
+      @negative_debit_card_file = fixture_file_upload('test_debit_card_negative_amounts.csv', 'text/csv')
+    end
+  end
 end
