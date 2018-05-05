@@ -1,0 +1,5 @@
+Type,Details,Particulars,Code,Reference,Amount,Date,ForeignCurrencyAmount,ConversionCharge
+Automatic Payment,Go,Bills Accoun,T,,-1111.11,02/05/2018,,
+Transfer,11-1111-1111111-01,extra,,,-1111.11,02/05/2018,,
+Transfer,1234-****-****-1234,Debit,Transfer,111111,-11.11,01/05/2018,,
+Eft-Pos,Taste Of India,1234********,9318   C,111111111111,-11.11,30/04/2018,,
