@@ -82,6 +82,13 @@ RSpec.describe TransactionsController, type: :controller do
         @negative_credit_card_file = fixture_file_upload('test_credit_card_negative_amounts.csv', 'text/csv')
       end
 
+      it 'imports transactions to the database' do
+        expect(Transaction.count).to eq 0
+        post :upload, params: { file: @negative_credit_card_file }
+
+        expect(Transaction.count).to be > 0
+      end
+
       it 'adds debits as negative values' do
         post :upload, params: { file: @negative_credit_card_file }
         expect(Transaction.last.amount).to be < 0
@@ -99,11 +106,11 @@ RSpec.describe TransactionsController, type: :controller do
         end
       end
 
-      it 'imports transactions to the database' do
-        expect(Transaction.count).to eq 0
-        post :upload, params: { file: @negative_credit_card_file }
 
-        expect(Transaction.count).to be > 0
+      it 'parameterizes transaction details' do
+        post :upload, params: { file: @positive_credit_card_file }
+
+        expect(Transaction.last.detail).to eq 'Coffee Supreme Limited Wellington NZ'.parameterize
       end
 
       context 'with category details already in the database' do

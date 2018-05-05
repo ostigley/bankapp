@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :transaction do
     transaction_date 2.days.ago
-    detail 'MacDonalds'
+    detail 'macdonalds'
     category nil
     amount 0 - 100.00
 
