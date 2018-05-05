@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :category_detail do
-    detail 'macdonalds'
+    detail Faker::Company.name.parameterize
     category 'eating-out'
   end
 end

@@ -173,11 +173,11 @@ RSpec.describe TransactionsController, type: :controller do
   end
 
   describe 'update' do
-    let(:detail) { 'Coffee is gooooo'.parameterize }
-    let(:new_category) { 'Eating out' }
-    let(:transactions_same_detail) { create_list(:transaction, 5, detail: detail) }
-
     context 'new categories on transactions with the same detail' do
+      let(:detail) { 'Coffee is gooooo'.parameterize }
+      let(:new_category) { 'Eating out' }
+      let(:transactions_same_detail) { create_list(:transaction, 5, detail: detail) }
+
       before do
         post :update, params: { format: 'json',
                                 transactions: { ids: transactions_same_detail.map(&:id),
@@ -197,6 +197,51 @@ RSpec.describe TransactionsController, type: :controller do
         expect(CategoryDetail.first.detail).to eq detail.parameterize
         expect(CategoryDetail.first.category).to eq new_category.parameterize
         expect(CategoryDetail.count).to eq 1
+      end
+
+      it 'responsds with statusd 200' do
+        expect(response.status).to eq 200
+      end
+    end
+
+    context 'exiting categories being added to a transaction' do
+      let(:transaction) { create(:transaction) }
+      let(:category_detail) { create(:category_detail) }
+
+      before do
+        post :update, params: { format: 'json',
+                                transactions: { ids: [transaction.id],
+                                                detail: nil,
+                                                category: category_detail.category } }
+      end
+
+      it 'adds the category to the transaction' do
+        transaction.reload
+        expect(transaction.category).to eq category_detail.category
+      end
+
+      it 'responsds with statusd 200' do
+        expect(response.status).to eq 200
+      end
+    end
+
+    context 'an error is raised' do
+      let(:transaction) { create(:transaction) }
+      let(:category_detail) { create(:category_detail) }
+
+      before do
+        post :update, params: { format: 'json',
+                                transactions: { ids: ['abc'],
+                                                detail: nil,
+                                                category: nil } }
+      end
+
+      it 'responds with status 500' do
+        expect(response.status).to eq 500
+      end
+
+      it 'has some error message in the response body' do
+        expect(response.body.present?).to be true
       end
     end
   end
