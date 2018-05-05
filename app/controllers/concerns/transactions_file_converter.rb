@@ -6,14 +6,16 @@ module TransactionsFileConverter
     @transactions = []
     csv_text = @file.read
     csv = CSV.parse(csv_text, :headers => true)
+
+    is_credit_card?(csv)
+
     csv.each do |row|
-      h = convert_hash_keys(row.to_hash)
-      date = h[:transaction_date].present? ? h[:transaction_date] : h[:date]
+      transaction_hash = convert_hash_keys(row.to_hash)
 
       @transactions << Transaction.create!({
-        transaction_date: date,
-        detail: h[:details],
-        amount: h[:amount]
+        transaction_date: get_date(transaction_hash),
+        amount:           get_amount(transaction_hash),
+        detail:           transaction_hash[:details]
       })
     end
 
@@ -22,8 +24,26 @@ module TransactionsFileConverter
 
   private
 
+  def get_date(transaction_hash)
+    @is_credit_card ? transaction_hash[:transaction_date] : transaction_hash[:date]
+  end
+
+  def get_amount(transaction_hash)
+    return transaction_hash[:amount] unless @is_credit_card
+
+    if transaction_hash[:type] == 'D'
+      0 - transaction_hash[:amount].to_f
+    else
+      transaction_hash[:amount]
+    end
+  end
+
   def underscore_key(k)
     k.to_s.underscore.to_sym
+  end
+
+  def is_credit_card?(csv)
+    @is_credit_card ||= csv.headers.include?('Card')
   end
 
   def convert_hash_keys(h)

@@ -15,6 +15,15 @@ RSpec.describe TransactionsController, type: :controller do
         @file = fixture_file_upload('test_debit_card.csv', 'text/csv')
       end
 
+      it 'adds debits as negative values' do
+        post :upload, params: { file: @file }
+        expect(Transaction.last.amount).to be < 0
+      end
+
+      it 'adds credits as positve values' do
+        post :upload, params: { file: @file }
+        expect(Transaction.first.amount).to be > 0
+      end
 
       it 'assigns an array of transactions' do
         post :upload, params: { file: @file }
@@ -59,6 +68,15 @@ RSpec.describe TransactionsController, type: :controller do
         @file = fixture_file_upload('test_credit_card.csv', 'text/csv')
       end
 
+      it 'adds debits as negative values' do
+        post :upload, params: { file: @file }
+        expect(Transaction.last.amount).to be < 0
+      end
+
+      it 'adds credits as positve values' do
+        post :upload, params: { file: @file }
+        expect(Transaction.first.amount).to be > 0
+      end
 
       it 'assigns an array of transactions' do
         post :upload, params: { file: @file }
