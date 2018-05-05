@@ -17,7 +17,7 @@ module TransactionsFileConverter
       @transactions << Transaction.create!(
         transaction_date: get_date(transaction_hash),
         amount:           get_amount(transaction_hash),
-        detail:           transaction_hash[:details]
+        detail:           transaction_hash[:details].parameterize
       )
     end
 

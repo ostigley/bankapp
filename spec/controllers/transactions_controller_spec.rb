@@ -24,6 +24,13 @@ RSpec.describe TransactionsController, type: :controller do
         end
       end
 
+      it 'imports transactions to the database' do
+        expect(Transaction.count).to eq 0
+        post :upload, params: { file: @positive_debit_card_file }
+
+        expect(Transaction.count).to be > 0
+      end
+
       it 'adds debits as negative values' do
         post :upload, params: { file: @negative_debit_card_file }
         expect(Transaction.last.amount).to be < 0
@@ -39,11 +46,10 @@ RSpec.describe TransactionsController, type: :controller do
         expect(Transaction.first.category).to eq 'Income'
       end
 
-      it 'imports transactions to the database' do
-        expect(Transaction.count).to eq 0
+      it 'parameterizes transaction details' do
         post :upload, params: { file: @positive_debit_card_file }
 
-        expect(Transaction.count).to be > 0
+        expect(Transaction.last.detail).to eq 'Taste Of India'.parameterize
       end
 
       context 'with category details already in the database' do
