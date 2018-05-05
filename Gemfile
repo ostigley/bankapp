@@ -23,6 +23,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.7'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
+  gem 'factory_bot_rails'
 end
 
 group :development do
