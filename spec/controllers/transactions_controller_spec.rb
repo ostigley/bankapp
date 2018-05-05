@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe TransactionsController, type: :controller do
-
   describe 'new' do
     it 'renders the new template' do
       get :new
@@ -41,7 +42,7 @@ RSpec.describe TransactionsController, type: :controller do
 
       context 'with category details already in the database' do
         before do
-          category_detail = instance_double('CategoryDetail', { category: 'test category' })
+          category_detail = instance_double('CategoryDetail', category: 'test category')
           allow(CategoryDetail).to receive(:find_by).and_return(category_detail)
         end
 
@@ -94,7 +95,7 @@ RSpec.describe TransactionsController, type: :controller do
 
       context 'with category details already in the database' do
         before do
-          category_detail = instance_double('CategoryDetail', { category: 'test category' })
+          category_detail = instance_double('CategoryDetail', category: 'test category')
           allow(CategoryDetail).to receive(:find_by).and_return(category_detail)
         end
 

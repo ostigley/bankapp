@@ -6,8 +6,7 @@ class TransactionsController < ApplicationController
 
   before_action :all_categories, only: :bulk_edit
 
-  def new
-  end
+  def new; end
 
   def upload
     @file = file_params
@@ -19,32 +18,19 @@ class TransactionsController < ApplicationController
 
   def bulk_edit
     transaction_ids = params[:ids].split '/'
-    @transactions = Transaction.find(transaction_ids).select {|t| t.category.blank? }
+    @transactions = Transaction.find(transaction_ids).select { |t| t.category.blank? }
 
     render :edit
   end
 
   def update
     respond_to do |format|
-      format.json  do
-        transaction_params[:ids].each do |id|
-          @transaction = Transaction.find_by_id(id)
-
-          if transaction_params[:detail]
-            @transaction.category = find_or_create_category_detail(transaction_params)
-          else
-            @transaction.category = transaction_params[:category]
-          end
-
-          @transaction.save!
-        end
-
-        return head :ok
+      format.json do
+        return head :ok if update_transactions
       end
     end
-
   rescue StandardError => e
-    binding.pry
+    render status: 500, body: e
   end
 
   private
@@ -54,6 +40,20 @@ class TransactionsController < ApplicationController
   end
 
   def transaction_params
-    params.require(:transaction).permit(:detail, :category, :ids => [])
+    params.require(:transaction).permit(:detail, :category, ids: [])
+  end
+
+  def update_transactions
+    transaction_params[:ids].each do |id|
+      @transaction = Transaction.find_by(id: id)
+
+      @transaction.category = if transaction_params[:detail]
+                                find_or_create_category_detail(transaction_params)
+                              else
+                                transaction_params[:category]
+                              end
+
+      @transaction.save!
+    end
   end
 end

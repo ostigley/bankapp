@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TransactionsFileConverter
   extend ActiveSupport::Concern
   require 'csv'
@@ -5,18 +7,18 @@ module TransactionsFileConverter
   def create_all_transactions
     @transactions = []
     csv_text = @file.read
-    csv = CSV.parse(csv_text, :headers => true)
+    csv = CSV.parse(csv_text, headers: true)
 
-    is_credit_card?(csv)
+    credit_card?(csv)
 
     csv.each do |row|
       transaction_hash = convert_hash_keys(row.to_hash)
 
-      @transactions << Transaction.create!({
+      @transactions << Transaction.create!(
         transaction_date: get_date(transaction_hash),
         amount:           get_amount(transaction_hash),
         detail:           transaction_hash[:details]
-      })
+      )
     end
 
     @transactions
@@ -42,7 +44,7 @@ module TransactionsFileConverter
     k.to_s.underscore.to_sym
   end
 
-  def is_credit_card?(csv)
+  def credit_card?(csv)
     @is_credit_card ||= csv.headers.include?('Card')
   end
 
