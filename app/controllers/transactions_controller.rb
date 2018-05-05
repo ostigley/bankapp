@@ -30,7 +30,11 @@ class TransactionsController < ApplicationController
         transaction_params[:ids].each do |id|
           @transaction = Transaction.find_by_id(id)
 
-          @transaction.category = find_or_create_category_detail(transaction_params)
+          if transaction_params[:detail]
+            @transaction.category = find_or_create_category_detail(transaction_params)
+          else
+            @transaction.category = transaction_params[:category]
+          end
 
           @transaction.save!
         end
