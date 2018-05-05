@@ -150,7 +150,7 @@ RSpec.describe TransactionsController, type: :controller do
       let(:transaction_without_category) { create(:transaction) }
 
       before do
-        get :bulk_edit, params: { ids: [ transaction_with_category.id, transaction_without_category.id ] }
+        get :bulk_edit, params: { ids: [transaction_with_category.id, transaction_without_category.id] }
       end
 
       it 'only assigns @transactions that have no category' do
@@ -160,9 +160,8 @@ RSpec.describe TransactionsController, type: :controller do
     end
   end
 
-
   describe 'bulk_update' do
-   before do
+    before do
       @positive_debit_card_file = fixture_file_upload('test_debit_card_positive_amounts.csv', 'text/csv')
       @negative_debit_card_file = fixture_file_upload('test_debit_card_negative_amounts.csv', 'text/csv')
     end
