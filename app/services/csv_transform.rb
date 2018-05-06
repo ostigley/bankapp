@@ -2,12 +2,11 @@
 
 class CsvTransform
   def initialize(csv)
-    @csv = csv
+    @headers = csv.headers
   end
 
   def calculate_date_header
-    headers = @csv.headers
-    date_headers = headers.select { |h| h.match(/date/i) }
+    date_headers = @headers.select { |h| h.match(/date/i) }
     return underscore_key(date_headers.first) if date_headers.count == 1
 
     # return date header that has 'transaction' key word
@@ -23,11 +22,15 @@ class CsvTransform
   def calculate_detail_headers
     detail_headers = []
 
-    @csv.headers.each do |header|
+    @headers.each do |header|
       detail_headers << underscore_key(header) unless header =~ /amount|date|currency/i
     end
 
     detail_headers
+  end
+
+  def credit_card?
+    @headers.include?('ProcessedDate')
   end
 
   private
