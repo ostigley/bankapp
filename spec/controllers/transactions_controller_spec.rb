@@ -48,8 +48,8 @@ RSpec.describe TransactionsController, type: :controller do
 
       it 'parameterizes transaction details' do
         post :upload, params: { file: @positive_debit_card_file }
-
-        expect(Transaction.last.detail).to eq 'Taste Of India'.parameterize
+        detail = 'Type: Eft-Pos, Details: Taste Of India, Code: 9318 C, Reference: 111111111111'
+        expect(Transaction.last.detail).to eq detail
       end
 
       context 'with category details already in the database' do
@@ -108,8 +108,9 @@ RSpec.describe TransactionsController, type: :controller do
 
       it 'parameterizes transaction details' do
         post :upload, params: { file: @positive_credit_card_file }
+        detail = 'Type: C, Details: Coffee Supreme Limited Wellington Nz '
 
-        expect(Transaction.last.detail).to eq 'Coffee Supreme Limited Wellington NZ'.parameterize
+        expect(Transaction.last.detail).to eq detail
       end
 
       context 'with category details already in the database' do

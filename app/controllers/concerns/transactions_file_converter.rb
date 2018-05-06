@@ -29,13 +29,13 @@ module TransactionsFileConverter
   def get_detail(transaction_hash)
     detail = []
     @csv_transform.calculate_detail_headers.each do |header|
-      # next if has card details or is blank
+      # next if has card details(****) or is blank
       next if transaction_hash[header].blank? || transaction_hash[header] =~ /[*]{4}/
 
-      detail << [header, transaction_hash[header]].join(': ')
+      detail << [header.capitalize, transaction_hash[header]].join(': ')
     end
 
-    detail.join(', ')
+    strip_extra_whitespace(detail.join(', '))
   end
 
   def get_date(transaction_hash)
@@ -51,6 +51,10 @@ module TransactionsFileConverter
     else
       transaction_hash[amount_header]
     end
+  end
+
+  def strip_extra_whitespace(str)
+    str.gsub(/\s{2,}/, ' ')
   end
 
   def underscore_key(key)
