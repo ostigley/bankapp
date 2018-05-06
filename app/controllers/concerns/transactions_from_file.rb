@@ -30,7 +30,7 @@ module TransactionsFromFile
     detail = []
     @csv_sniffer.calculate_detail_headers.each do |header|
       # next if has card details(****) or is blank
-      next if transaction_hash[header].blank? || transaction_hash[header] =~ /[*]{4}/
+      next if transaction_hash[header].blank? || transaction_hash[header] =~ /[*]{4}/ || header == :reference
 
       detail << [header.capitalize, transaction_hash[header]].join(': ')
     end

@@ -2,6 +2,7 @@
 
 class CsvFileSniffer
   def initialize(csv)
+    @csv
     @headers = csv.headers
   end
 
@@ -35,11 +36,11 @@ class CsvFileSniffer
 
   private
 
-  def underscore_key(k)
-    k.to_s.underscore.to_sym
+  def underscore_key(key)
+    key.to_s.underscore.to_sym
   end
 
-  def convert_hash_keys(h)
-    Hash[h.map { |k, v| [underscore_key(k), v] }]
+  def convert_hash_keys(hash)
+    Hash[hash.map { |k, v| [underscore_key(k), v] }]
   end
 end

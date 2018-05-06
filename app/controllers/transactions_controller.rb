@@ -30,7 +30,7 @@ class TransactionsController < ApplicationController
       end
     end
   rescue StandardError => e
-    render status: 500, body: e
+    render status: :internal_server_error, body: e
   end
 
   private

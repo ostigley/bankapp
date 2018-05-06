@@ -51,7 +51,7 @@ RSpec.describe TransactionsController, type: :controller do
 
       it 'parameterizes transaction details' do
         post :upload, params: { file: @positive_debit_card_file }
-        detail = 'Type: Eft-Pos, Details: Taste Of India, Code: 9318 C, Reference: 111111111111'
+        detail = 'Type: Eft-Pos, Details: Taste Of India, Code: 9318 C'
 
         expect(Transaction.last.detail).to eq detail
       end
@@ -76,6 +76,23 @@ RSpec.describe TransactionsController, type: :controller do
           Transaction.all.each do |transaction|
             expect(transaction.category).to be nil
           end
+        end
+      end
+
+      context 'with transactions that have identical details but different reference' do
+        before do
+          @file = fixture_file_upload('test_debit_card_identical_detail_dif_reference.csv', 'text/csv')
+
+          post :upload, params: { file: @file }
+        end
+
+        it 'are saved all with the same detail string' do
+          # this has to happen to allow matching of transactions from the same establishment
+          # at different times (ie different reference entries)
+
+          details = Transaction.all.map(&:detail)
+          expect(details.uniq.count).to eq 1
+          expect(Transaction.count).to eq 4
         end
       end
     end
