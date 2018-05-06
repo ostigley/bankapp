@@ -161,7 +161,6 @@ RSpec.describe TransactionsController, type: :controller do
       let(:transactions) { create_list(:transaction, 3) }
       let!(:category_detail) { create(:category_detail) }
 
-
       it 'does not include positive amounts' do
         transactions.first.update_attribute(:amount, -100.00)
         get :bulk_edit, params: { ids: transactions.map(&:id) }

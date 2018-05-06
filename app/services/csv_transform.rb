@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CsvTransform
   def initialize(csv)
     @csv = csv
