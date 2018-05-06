@@ -18,12 +18,14 @@ $(function() {
   }));
 
   $('select').on('change', function(){
+    // todo
+    // options should be uniq, not repeated categories
+    // select change finds all others like it(by form parent data-detail) (as above)
     var category = this.options[this.options.selectedIndex].text
     var id = $(this.parentElement).data().id
 
     postCategory([id], category)
   })
-
 
   function postCategory(ids, category, detail, parentElement) {
     $.ajax({
