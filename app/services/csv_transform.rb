@@ -13,6 +13,21 @@ class CsvTransform
     underscore_key(transaction_date_header)
   end
 
+  def calculate_amount_header
+    # place holder if other csv files have different headers
+    :amount
+  end
+
+  def calculate_detail_headers
+    detail_headers = []
+
+    @csv.headers.each do |header|
+      detail_headers << underscore_key(header) unless header =~ /amount|date|currency/i
+    end
+
+    detail_headers
+  end
+
   private
 
   def underscore_key(k)
