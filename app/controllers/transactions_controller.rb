@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TransactionsController < ApplicationController
-  include TransactionsFileConverter
+  include TransactionsFromFile
   include CategoryDetailLookup
 
   before_action :all_categories, only: :bulk_edit
@@ -17,8 +17,8 @@ class TransactionsController < ApplicationController
   end
 
   def bulk_edit
-    transaction_ids = params[:ids].split '/'
-    @transactions = Transaction.find(transaction_ids).select { |t| t.category.blank? }
+    # transaction_ids = params[:ids].split '/'
+    @transactions = Transaction.where(category: nil)
 
     render :edit
   end

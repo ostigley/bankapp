@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'csv'
 
-RSpec.describe CsvTransform do
+RSpec.describe CsvFileSniffer do
   describe 'calculate_date_header' do
     context 'credit card csv file' do
       let(:csv) do
@@ -13,7 +13,7 @@ RSpec.describe CsvTransform do
                  headers: true)
       end
 
-      let(:csv_tranform_instance) { CsvTransform.new(csv) }
+      let(:csv_tranform_instance) { CsvFileSniffer.new(csv) }
 
       it 'returns the hash key containing the transaction date' do
         expect(csv_tranform_instance.calculate_date_header).to eq :transaction_date
@@ -27,7 +27,7 @@ RSpec.describe CsvTransform do
                                  'test_debit_card_negative_amounts.csv'),
                  headers: true)
       end
-      let(:csv_tranform_instance) { CsvTransform.new(csv) }
+      let(:csv_tranform_instance) { CsvFileSniffer.new(csv) }
 
       it 'returns the hash key containing the transaction date' do
         expect(csv_tranform_instance.calculate_date_header).to eq :date
@@ -47,7 +47,7 @@ RSpec.describe CsvTransform do
                                  'test_credit_card_negative_amounts.csv'),
                  headers: true)
       end
-      let(:csv_tranform_instance) { CsvTransform.new(csv) }
+      let(:csv_tranform_instance) { CsvFileSniffer.new(csv) }
 
       it 'returns the hash key containing the transaction date' do
         headers = %i[card type details conversion_charge]
@@ -63,7 +63,7 @@ RSpec.describe CsvTransform do
                                  'test_debit_card_negative_amounts.csv'),
                  headers: true)
       end
-      let(:csv_tranform_instance) { CsvTransform.new(csv) }
+      let(:csv_tranform_instance) { CsvFileSniffer.new(csv) }
 
       it 'returns the hash key containing the transaction date' do
         headers = %i[type details particulars code reference conversion_charge]

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CsvTransform
+class CsvFileSniffer
   def initialize(csv)
     @headers = csv.headers
   end

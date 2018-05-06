@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module TransactionsFileConverter
+module TransactionsFromFile
   extend ActiveSupport::Concern
   require 'csv'
 
@@ -9,7 +9,7 @@ module TransactionsFileConverter
     csv_text = @file.read
     csv = CSV.parse(csv_text, headers: true)
 
-    @csv_transform = CsvTransform.new(csv)
+    @csv_sniffer = CsvFileSniffer.new(csv)
 
     csv.each do |row|
       transaction_hash = convert_hash_keys(row.to_hash)
@@ -28,7 +28,7 @@ module TransactionsFileConverter
 
   def get_detail(transaction_hash)
     detail = []
-    @csv_transform.calculate_detail_headers.each do |header|
+    @csv_sniffer.calculate_detail_headers.each do |header|
       # next if has card details(****) or is blank
       next if transaction_hash[header].blank? || transaction_hash[header] =~ /[*]{4}/
 
@@ -39,12 +39,12 @@ module TransactionsFileConverter
   end
 
   def get_date(transaction_hash)
-    transaction_hash[@csv_transform.calculate_date_header]
+    transaction_hash[@csv_sniffer.calculate_date_header]
   end
 
   def get_amount(transaction_hash)
-    amount_header = @csv_transform.calculate_amount_header
-    return transaction_hash[amount_header] unless @csv_transform.credit_card?
+    amount_header = @csv_sniffer.calculate_amount_header
+    return transaction_hash[amount_header] unless @csv_sniffer.credit_card?
 
     if transaction_hash[:type] =~ /^D|Debit/
       0 - transaction_hash[amount_header].to_f
