@@ -19,12 +19,15 @@ gem 'jquery-rails'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'capybara', '~> 2.13'
+  gem 'capybara', '2.17.0'
   gem 'rspec-rails', '~> 3.7'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'factory_bot_rails'
   gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
+  gem 'capybara-selenium'
+  gem 'chromedriver-helper'
+  gem 'capybara-screenshot'
 end
 
 group :development do
