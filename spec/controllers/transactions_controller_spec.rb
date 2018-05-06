@@ -33,22 +33,26 @@ RSpec.describe TransactionsController, type: :controller do
 
       it 'adds debits as negative values' do
         post :upload, params: { file: @negative_debit_card_file }
+
         expect(Transaction.last.amount).to be < 0
       end
 
       it 'adds credits as positve values' do
         post :upload, params: { file: @positive_debit_card_file }
+
         expect(Transaction.first.amount).to be > 0
       end
 
       it 'adds category Income if amount is credit or positive' do
         post :upload, params: { file: @positive_debit_card_file }
+
         expect(Transaction.first.category).to eq 'income'
       end
 
       it 'parameterizes transaction details' do
         post :upload, params: { file: @positive_debit_card_file }
         detail = 'Type: Eft-Pos, Details: Taste Of India, Code: 9318 C, Reference: 111111111111'
+
         expect(Transaction.last.detail).to eq detail
       end
 
@@ -91,11 +95,13 @@ RSpec.describe TransactionsController, type: :controller do
 
       it 'adds debits as negative values' do
         post :upload, params: { file: @negative_credit_card_file }
+
         expect(Transaction.last.amount).to be < 0
       end
 
       it 'adds credits as positve values' do
         post :upload, params: { file: @positive_credit_card_file }
+
         expect(Transaction.first.amount).to be > 0
       end
 
@@ -232,6 +238,7 @@ RSpec.describe TransactionsController, type: :controller do
 
       it 'adds the category to the transaction' do
         transaction.reload
+
         expect(transaction.category).to eq category_detail.category
       end
 
