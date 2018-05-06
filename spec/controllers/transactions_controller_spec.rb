@@ -157,6 +157,21 @@ RSpec.describe TransactionsController, type: :controller do
       expect(response).to render_template(:edit)
     end
 
+    context 'positive transaction amounts' do
+      let(:transactions) { create_list(:transaction, 3) }
+      let!(:category_detail) { create(:category_detail) }
+
+
+      it 'does not include positive amounts' do
+        transactions.first.update_attribute(:amount, -100.00)
+        get :bulk_edit, params: { ids: transactions.map(&:id) }
+
+        assigns[:transactions].each do |transaction|
+          expect(transaction.amount).to be < 0
+        end
+      end
+    end
+
     context 'transactions that already have categories assigned' do
       let(:transaction_with_category) { create(:transaction, category: 'eating-out') }
       let(:transaction_without_category) { create(:transaction) }
