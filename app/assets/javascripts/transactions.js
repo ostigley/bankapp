@@ -15,6 +15,10 @@ $(function() {
     }).toArray();
 
     postCategory(transactionIds, newCategory, transactionDetail)
+    $('select').append($('<option>', {
+      value: newCategory,
+      text: newCategory
+    }));
   }));
 
   $('select').on('change', function(){
