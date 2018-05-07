@@ -174,7 +174,7 @@ RSpec.describe TransactionsController, type: :controller do
     end
 
     it 'assigns @category_details' do
-      expect(assigns[:category_details]).to eq CategoryDetail.all
+      expect(assigns[:category_details]).to eq [category_detail.category]
     end
 
     it 'renders the edit template' do

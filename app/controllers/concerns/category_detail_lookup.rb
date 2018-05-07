@@ -4,7 +4,7 @@ module CategoryDetailLookup
   extend ActiveSupport::Concern
 
   def all_categories
-    @category_details = CategoryDetail.all
+    @category_details = CategoryDetail.all.map(&:category).uniq
   end
 
   def find_or_create_category_detail(transaction)
