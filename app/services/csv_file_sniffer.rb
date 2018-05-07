@@ -2,7 +2,6 @@
 
 class CsvFileSniffer
   def initialize(csv)
-    @csv
     @headers = csv.headers
   end
 

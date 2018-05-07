@@ -8,13 +8,7 @@ $(function() {
                         })
                       .value;
 
-    var transactionDetail = $(this.parentElement).data().detail;
-    var transactions = $("input[data-detail=" + transactionDetail + "]");
-    var transactionIds = transactions.map(function(i,t) {
-      return $(t.parentElement).data().id
-    }).toArray();
-
-    postCategory(transactionIds, newCategory, transactionDetail)
+    postCategory(this, newCategory);
     $('select').append($('<option>', {
       value: newCategory,
       text: newCategory
@@ -22,33 +16,36 @@ $(function() {
   }));
 
   $('select').on('change', function(){
-    // todo
-    // options should be uniq, not repeated categories
-    // select change finds all others like it(by form parent data-detail) (as above)
-    var category = this.options[this.options.selectedIndex].text
-    var id = $(this.parentElement).data().id
+    var category = this.options[this.options.selectedIndex].text;
+    var id = $(this.parentElement).data().id;
 
-    postCategory([id], category)
+    postCategory(this, category);
   })
 
-  function postCategory(ids, category, detail, parentElement) {
+  function postCategory(element, category) {
+    var transactionDetail = $(element.parentElement).data().detail;
+    var transactions = $("input[data-detail=" + transactionDetail + "]");
+    var transactionIds = transactions.map(function(i,t) {
+      return $(t.parentElement).data().id
+    }).toArray();
+
     $.ajax({
       beforeSend: function (xhr) {
-        xhr.setRequestHeader('X-CSRF-Token', token)
+        xhr.setRequestHeader('X-CSRF-Token', token);
       },
       dataType: 'json',
       data: {
         "transactions" : {
-          "ids": ids,
+          "ids": transactionIds,
           "category": category,
-          "detail": detail,
+          "detail": transactionDetail,
         }
       },
       type: 'POST',
       url: '/transactions/edit',
       complete: function(data) {
         if (data.status == 200) {
-          ids.map(function(id) {
+          transactionIds.map(function(id) {
             $("form[data-id=" + id + "]").hide();
           });
         } else {

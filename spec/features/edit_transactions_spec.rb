@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.feature 'EditTransactions', type: :feature, js: true do
@@ -43,10 +45,6 @@ RSpec.feature 'EditTransactions', type: :feature, js: true do
           expect(t.reload.category).to eq 'eating-out'
         end
       end
-
-      # it 'adds the new category to the drop down list' do
-      #   select 'eating out', from: 'Select a category or create one'
-      # end
     end
   end
 end
