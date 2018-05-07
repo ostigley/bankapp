@@ -9,7 +9,7 @@
   %br
   = label_tag(:category, 'Select a category or create one')
   %br
-  = select_tag(:category, category_detail_options,  include_blank: 'Select a category')
+  = select_tag(:category, category_detail_options, include_blank: 'Select a category', "data-id" => transaction.id)
   %br
   = label_tag(:new_category, 'New category')
   = text_field_tag(:new_category, nil, 'data-detail' => transaction.detail.parameterize)
