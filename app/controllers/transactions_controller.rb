@@ -19,7 +19,7 @@ class TransactionsController < ApplicationController
   def bulk_edit
     # transaction_ids = params[:ids].split '/'
     @transactions = Transaction.where(category: nil)
-    # @transactions =  Transaction.all
+    @transactions =  Transaction.all
     render :edit
   end
 

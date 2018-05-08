@@ -1,0 +1,6 @@
+- @categories.each do |category|
+ %p
+  = ' Total '
+  = category
+  = @transactions.select { |transaction| transaction.category == category }.sum(&:amount).round
+

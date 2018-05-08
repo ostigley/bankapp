@@ -1,0 +1,7 @@
+- @categories.each do |category|
+  - # next if category == 'transfer'
+  %p
+  = ' Total '
+  = category
+  = percent(sum_category(category), income)
+
