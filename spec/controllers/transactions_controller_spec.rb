@@ -32,6 +32,7 @@ RSpec.describe TransactionsController, type: :controller do
       end
 
       it 'adds debits as negative values' do
+
         post :upload, params: { file: @negative_debit_card_file }
 
         expect(Transaction.last.amount).to be < 0
@@ -49,7 +50,7 @@ RSpec.describe TransactionsController, type: :controller do
         expect(Transaction.first.category).to eq 'income'
       end
 
-      it 'parameterizes transaction details' do
+      it 'collates transaction details' do
         post :upload, params: { file: @positive_debit_card_file }
         detail = 'Type: Eft-Pos, Details: Taste Of India, Code: 9318 C'
 
@@ -58,14 +59,14 @@ RSpec.describe TransactionsController, type: :controller do
 
       context 'with category details already in the database' do
         before do
-          category_detail = instance_double('CategoryDetail', category: 'test category')
+          category_detail = instance_double('CategoryDetail', category: 'test-category')
           allow(CategoryDetail).to receive(:find_by).and_return(category_detail)
         end
 
         it 'finds the category_detail and adds it to the transaction' do
           post :upload, params: { file: @negative_debit_card_file }
           Transaction.all.each do |transaction|
-            expect(transaction.category).to eq 'test category'
+            expect(transaction.category).to eq 'test-category'
           end
         end
       end

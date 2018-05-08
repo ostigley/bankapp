@@ -20,7 +20,7 @@ module CategoryDetailLookup
       if transaction.amount.positive?
         transaction.update_attribute(:category, 'income')
       else
-        category = CategoryDetail.find_by(detail: transaction.detail)
+        category = CategoryDetail.find_by(detail: transaction.detail.parameterize)
 
         transaction.update_attribute(:category, category&.category)
       end
