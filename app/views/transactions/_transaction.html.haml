@@ -1,6 +1,7 @@
 = form_tag('/transactions/build_update', remote: true, 'data-id' => transaction.id, 'data-detail' => transaction.detail.parameterize) do
   %label
-    Detail:
+    Detail: count
+    = @transactions.select {|t| t.detail ==  transaction.detail}.count
     - transaction.detail.split(',').each do |t|
       %p
         = t
