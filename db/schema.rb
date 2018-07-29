@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180508074908) do
+ActiveRecord::Schema.define(version: 20180729051528) do
 
   create_table "category_details", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "detail"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20180508074908) do
     t.float "amount", limit: 24
     t.string "category"
     t.string "transaction_hash"
+    t.index ["transaction_hash"], name: "index_transactions_on_transaction_hash"
   end
 
 end
