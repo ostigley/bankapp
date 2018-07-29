@@ -13,8 +13,11 @@ module TransactionsFromFile
 
     csv.each do |row|
       transaction_hash = convert_hash_keys(row.to_hash)
+      hash = Digest::MD5.hexdigest(transaction_hash.to_s)
+      next if Transaction.find_by(transaction_hash: hash)
 
       @transactions << Transaction.create!(
+        transaction_hash: hash,
         transaction_date: get_date(transaction_hash),
         amount:           get_amount(transaction_hash),
         detail:           get_detail(transaction_hash)
