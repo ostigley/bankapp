@@ -1,6 +1,10 @@
-%h1 Last 30 days
-= render partial: 'transaction_summary_table', locals: { transactions: @transactions_30_days }
-%h1 Last 3 months
-= render partial: 'transaction_summary_table', locals: { transactions: @transactions_3_months }
-%h1 All time spending habits
-= render partial: 'transaction_summary_table', locals: { transactions: @transactions }
+.tx_summary_tables
+  .tx_summary_table
+    %h1 Last 30 days
+    = render partial: 'transaction_summary_table', locals: { transactions: @transactions_30_days }
+  .tx_summary_table
+    %h1 Last 3 months
+    = render partial: 'transaction_summary_table', locals: { transactions: @transactions_3_months }
+  .tx_summary_table
+    %h1 All time spending habits
+    = render partial: 'transaction_summary_table', locals: { transactions: @transactions }

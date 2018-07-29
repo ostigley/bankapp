@@ -2,6 +2,17 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.tx_summary_tables {
+  display: inline-flex;
+}
+.tx_summary_table {
+}
+h1 {
+  width: 100%
+}
+table {
+  width: 30%;
+}
 tr {
   width: 100%;
 }
