@@ -1,7 +1,6 @@
-- @categories.each do |category|
-  - # next if category == 'transfer'
-  %p
-  = ' Total '
-  = category
-  = percent(sum_category(category), income)
-
+%h1 Last 30 days
+= render partial: 'transaction_summary_table', locals: { transactions: @transactions_30_days }
+%h1 Last 3 months
+= render partial: 'transaction_summary_table', locals: { transactions: @transactions_3_months }
+%h1 All time spending habits
+= render partial: 'transaction_summary_table', locals: { transactions: @transactions }

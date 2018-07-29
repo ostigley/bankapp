@@ -17,11 +17,8 @@ class TransactionsController < ApplicationController
   end
 
   def bulk_edit
-    @transactions = Transaction.where(category: nil).sort do |a,b|
-      a_count = Transaction.where(category: nil, detail: a.detail).count
-      b_count = Transaction.where(category: nil, detail: b.detail).count
-      b_count <=> a_count
-    end
+    @transactions = Transaction.where(category: nil).order(:detail)
+
     render :edit
   end
 

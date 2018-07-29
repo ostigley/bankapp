@@ -5,6 +5,8 @@ class SummaryController < ApplicationController
 
   def index
     @transactions = Transaction.all
+    @transactions_30_days = Transaction.where(transaction_date: (Time.now.to_date - 30.days)..Time.now.to_date)
+    @transactions_3_months = Transaction.where(transaction_date: (Time.now.to_date - 3.months)..Time.now.to_date)
   end
 
   def show

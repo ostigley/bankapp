@@ -1,0 +1,14 @@
+%table
+  %th Category
+  %th %
+  %th Amount $
+
+  - @categories.each do |category|
+    - # next if category == 'transfer'
+    %tr
+      %td
+        = category
+      %td
+        = category_percent(category, transactions)
+      %td
+        = sum_category(category, transactions)
