@@ -8,4 +8,5 @@ Rails.application.routes.draw do
   post '/transactions/edit', to: 'transactions#update'
 
   get '/summary/:month/:year', to: 'summary#show'
+  get '/category/:category', to: 'summary#category'
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SummaryController < ApplicationController
-  before_action :categories
+  before_action :categories, except: :category
 
   def index
     @transactions = Transaction.all
@@ -13,6 +13,20 @@ class SummaryController < ApplicationController
     start_date = Date.new(date_range_params[:year].to_i, date_range_params[:month].to_i)
     end_date = start_date.end_of_month
     @transactions = Transaction.where(transaction_date: start_date..end_date)
+  end
+
+  def category
+    transactions = Transaction.where(category: params[:category]).order(transaction_date: :desc)
+    @category_months = transactions.each_with_object({}) do |tx, obj|
+      month_year = tx.transaction_date.strftime('%b %Y')
+      obj[month_year] = if obj.has_key? month_year
+                          obj[month_year] + tx.amount.abs
+                        else
+                          tx.amount.abs
+                        end
+    end
+    binding.pry
+    render :category
   end
 
   private
