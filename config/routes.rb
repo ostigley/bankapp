@@ -9,4 +9,6 @@ Rails.application.routes.draw do
 
   get '/summary/:month/:year', to: 'summary#show'
   get '/category/:category', to: 'summary#category'
+
+  get 'category_month/:category/:date', to: 'summary#category_month'
 end

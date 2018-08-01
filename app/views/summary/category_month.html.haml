@@ -1,0 +1,13 @@
+%h1
+  = params[:category]
+  in 
+  = params[:date]
+
+- @transactions.each do |tx|
+  %p
+    = tx.transaction_date
+  %p
+    = tx.detail
+  %p
+    = tx.amount
+  %hr

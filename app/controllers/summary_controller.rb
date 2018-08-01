@@ -27,6 +27,15 @@ class SummaryController < ApplicationController
     render :category
   end
 
+  def category_month
+    category = params[:category]
+    start_date = params[:date].to_date
+    end_date = params[:date].to_date + 1.month - 1.day
+    @transactions = Transaction.where(category: category, transaction_date: start_date..end_date).order(transaction_date: :asc)
+
+    render :category_month
+  end
+
   private
 
   def tsv_header

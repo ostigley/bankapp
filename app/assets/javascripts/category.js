@@ -33,9 +33,19 @@ var tsv = $('div[data-tsv]').data().tsv.split('\\t').join('\t').split('\\n').joi
   g.selectAll(".bar")
     .data(data)
     .enter().append("rect")
+      .attr("data-date", function(d) { return (d.month); })
       .attr("class", "bar")
       .attr("x", function(d) { return x(d.month); })
       .attr("y", function(d) { return y(Number(d.value)); })
       .attr("width", x.bandwidth())
       .attr("height", function(d) { return height - y(Number(d.value)); });
+
+  $('rect').each(function(i,r) {
+    $(r).on('click', () => {
+      const date = $(r).data().date
+      const category = window.location.pathname.split('/').pop();
+      window.location.href = `/category_month/${category}/${date}`
+    })
+  })
+
 })();
