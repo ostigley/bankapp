@@ -1,2 +1,14 @@
-%h1 params[:category]
-- @category_months.each do |month, amount|
+:css
+  .bar {
+    fill: steelblue;
+  }
+  .bar:hover {
+    fill: brown;
+  }
+  .axis--x path {
+    display: none;
+  }
+%svg{:height => "500", :width => "960"}
+%script{:src => "https://d3js.org/d3.v4.min.js"}
+%div{"data-tsv" => @tsv}
+= javascript_include_tag 'category'

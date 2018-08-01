@@ -7,7 +7,7 @@
     - # next if category == 'transfer'
     %tr
       %td
-        = category
+        = link_to category, "/category/#{category}"
       %td
         = category_percent(category, transactions)
       %td
