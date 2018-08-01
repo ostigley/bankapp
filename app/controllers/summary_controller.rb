@@ -33,6 +33,11 @@ class SummaryController < ApplicationController
     end_date = params[:date].to_date + 1.month - 1.day
     @transactions = Transaction.where(category: category, transaction_date: start_date..end_date).order(transaction_date: :asc)
 
+    @transactions = @transactions.each_with_object(days_object({}, start_date)) do |tx, obj|
+      day = tx.transaction_date.strftime('%A %d')
+      obj[day] << tx
+    end
+
     render :category_month
   end
 
@@ -57,5 +62,14 @@ class SummaryController < ApplicationController
     return current_hash if next_date == Time.zone.now.strftime('%b, %Y')
 
     months_object(current_hash, date + 1.month)
+  end
+
+  def days_object(current_hash, date)
+    next_date = date.strftime('%A %d')
+    current_hash[next_date] = []
+
+    return current_hash if next_date == Time.zone.now.strftime('%A %d')
+
+    days_object(current_hash, date + 1.day)
   end
 end

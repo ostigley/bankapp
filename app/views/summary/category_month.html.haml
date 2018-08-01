@@ -3,11 +3,13 @@
   in 
   = params[:date]
 
-- @transactions.each do |tx|
-  %p
-    = tx.transaction_date
-  %p
-    = tx.detail
-  %p
-    = tx.amount
+- @transactions.each do |day, tx_array|
+  - next if tx_array.empty?
+  %h3
+    = day
+  - tx_array.each do |tx|
+    %p
+      = tx.detail
+    %p
+      = tx.amount
   %hr
