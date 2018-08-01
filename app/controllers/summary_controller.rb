@@ -16,15 +16,11 @@ class SummaryController < ApplicationController
   end
 
   def category
-    transactions = Transaction.where(category: params[:category]).order(transaction_date: :desc)
-
-    category_months = transactions.each_with_object({}) do |tx, obj|
-      month_year = tx.transaction_date.strftime('%b')
-      obj[month_year] = if obj.has_key? month_year
-                          obj[month_year] + tx.amount.round.abs
-                        else
-                          tx.amount.round.abs
-                        end
+    transactions = Transaction.where(category: params[:category]).order(transaction_date: :asc)
+    start_date = transactions.first.transaction_date
+    category_months = transactions.each_with_object(months_object({}, start_date)) do |tx, obj|
+      month_year = tx.transaction_date.strftime('%b, %Y')
+      obj[month_year] += tx.amount.round.abs
     end
 
     @tsv = HashToTsv.new(category_months, 'month\tvalue').tsv
@@ -43,5 +39,14 @@ class SummaryController < ApplicationController
 
   def date_range_params
     params.permit(:month, :year)
+  end
+
+  def months_object(current_hash, date)
+    next_date = date.strftime('%b, %Y')
+    current_hash[next_date] = 0
+
+    return current_hash if next_date == Time.zone.now.strftime('%b, %Y')
+
+    months_object(current_hash, date + 1.month)
   end
 end
