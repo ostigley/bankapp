@@ -24,12 +24,7 @@ class SummaryController < ApplicationController
   end
 
   def category_month
-    category = params[:category]
-    start_date = params[:date].to_date
-    end_date = params[:date].to_date + 1.month - 1.day
-    transactions_array = Transaction.where(category: category, transaction_date: start_date..end_date).order(transaction_date: :asc)
-
-    @transactions = Transactions::DateReduce.by_day(transactions_array)
+    @transactions = Transactions::DateReduce.by_day Transaction.find_category_date(params)
 
     render :category_month
   end
