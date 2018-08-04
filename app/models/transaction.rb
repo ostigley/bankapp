@@ -9,4 +9,12 @@ class Transaction < ApplicationRecord
     end_date = params[:date].to_date + 1.month - 1.day
     where(category: category, transaction_date: start_date..end_date).order(transaction_date: :asc)
   }
+
+  def self.last_30_days
+    where(transaction_date: (Time.zone.now.to_date - 30.days)..Time.zone.now.to_date)
+  end
+
+  def self.last_3_months
+    where(transaction_date: (Time.zone.now.to_date - 3.months)..Time.zone.now.to_date)
+  end
 end
