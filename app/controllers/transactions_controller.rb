@@ -16,6 +16,13 @@ class TransactionsController < ApplicationController
     redirect_to action: 'bulk_edit', ids: @transactions.map(&:id)
   end
 
+  def show_detail
+    transactions = Transaction.where(detail: params[:detail]).order(transaction_date: :asc)
+    transactions_per_month_hash = Transactions::DateReduce.by_month(transactions)
+
+    @tsv = HashToTsv.convert(transactions_per_month_hash, 'month\tvalue')
+  end
+
   def bulk_edit
     @transactions = Transaction.where(category: nil).order(:detail)
 

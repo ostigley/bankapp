@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   post '/transactions/upload', to: 'transactions#upload'
   get '/transactions/edit/:ids', to: 'transactions#bulk_edit'
   post '/transactions/edit', to: 'transactions#update'
+  get '/transaction-detail/:detail', to: 'transactions#show_detail'
 
   get '/summary/:month/:year', to: 'summary#show'
   get '/category/:category', to: 'summary#category'

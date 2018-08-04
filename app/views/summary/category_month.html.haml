@@ -8,8 +8,7 @@
   %h3
     = day
   - tx_array.each do |tx|
-    %p
-      = tx.detail
+    = link_to tx.detail, "/transaction-detail/#{tx.detail}"
     %p
       = tx.amount
   %hr

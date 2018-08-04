@@ -15,7 +15,7 @@ var tsv = $('div[data-tsv]').data().tsv.split('\\t').join('\t').split('\\n').joi
 (function barGraph () {
   var data = d3.tsvParse(tsv)
   x.domain(data.map(function(d) { return d.month; }));
-  y.domain([0, d3.max(data, function(d) { return Number(d.value); })+100]);
+  y.domain([0, d3.max(data, function(d) { return Number(d.value); })*1.1]);
 
   g.append("g")
       .attr("class", "axis axis--x")
