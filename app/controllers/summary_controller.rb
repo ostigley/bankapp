@@ -17,13 +17,9 @@ class SummaryController < ApplicationController
 
   def category
     transactions = Transaction.where(category: params[:category]).order(transaction_date: :asc)
-    start_date = transactions.first.transaction_date
-    category_months = transactions.each_with_object(months_object({}, start_date)) do |tx, obj|
-      month_year = tx.transaction_date.strftime('%b, %Y')
-      obj[month_year] += tx.amount.round.abs
-    end
+    transactions_per_month_hash = Transactions::DateReduce.by_month(transactions)
+    @tsv = HashToTsv.convert(transactions_per_month_hash, 'month\tvalue')
 
-    @tsv = HashToTsv.new(category_months, 'month\tvalue').tsv
     render :category
   end
 
@@ -31,21 +27,14 @@ class SummaryController < ApplicationController
     category = params[:category]
     start_date = params[:date].to_date
     end_date = params[:date].to_date + 1.month - 1.day
-    @transactions = Transaction.where(category: category, transaction_date: start_date..end_date).order(transaction_date: :asc)
+    transactions_array = Transaction.where(category: category, transaction_date: start_date..end_date).order(transaction_date: :asc)
 
-    @transactions = @transactions.each_with_object(days_object({}, start_date)) do |tx, obj|
-      day = tx.transaction_date.strftime('%A %d')
-      obj[day] << tx
-    end
+    @transactions = Transactions::DateReduce.by_day(transactions_array)
 
     render :category_month
   end
 
   private
-
-  def tsv_header
-    ['Month\tYear']
-  end
 
   def categories
     @categories = CategoryDetail.all.map(&:category).uniq
@@ -55,21 +44,12 @@ class SummaryController < ApplicationController
     params.permit(:month, :year)
   end
 
-  def months_object(current_hash, date)
-    next_date = date.strftime('%b, %Y')
-    current_hash[next_date] = 0
+  # def days_object(current_hash, date)
+  #   next_date = date.strftime('%A %d')
+  #   current_hash[next_date] = []
 
-    return current_hash if next_date == Time.zone.now.strftime('%b, %Y')
+  #   return current_hash if next_date == Time.zone.now.strftime('%A %d')
 
-    months_object(current_hash, date + 1.month)
-  end
-
-  def days_object(current_hash, date)
-    next_date = date.strftime('%A %d')
-    current_hash[next_date] = []
-
-    return current_hash if next_date == Time.zone.now.strftime('%A %d')
-
-    days_object(current_hash, date + 1.day)
-  end
+  #   days_object(current_hash, date + 1.day)
+  # end
 end
