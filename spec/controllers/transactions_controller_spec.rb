@@ -32,7 +32,6 @@ RSpec.describe TransactionsController, type: :controller do
       end
 
       it 'adds debits as negative values' do
-
         post :upload, params: { file: @negative_debit_card_file }
 
         expect(Transaction.last.amount).to be < 0
