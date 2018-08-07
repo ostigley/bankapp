@@ -10,26 +10,26 @@ module Transactions
     # create object and save
     end
 
-    # def credit_card_transaction?
-    #   card = transaction_hash[:card]
-    #   # 4988-****-****-9318
-    #   card.present && card ~= /[0-9]{4}-(\*{4}-\*{4})-[0-9]{4}/
-    # end
+    def credit_card_transaction?
+      card = transaction_hash[:card]
+      # 4988-****-****-9318
+      card.present? && card.match(/[0-9]{4}-(\*{4}-\*{4})-[0-9]{4}/).present?
+    end
 
-    # def transaction_detail
-    #   credit_card_transaction? ? cc_transaction_detail : dc_transaction_detail
-    # end
+    def transaction_detail
+      credit_card_transaction? ? cc_transaction_detail : dc_transaction_detail
+    end
 
-    # def cc_transaction_detail
-    #   transaction_hash[:details]
-    # end
+    def cc_transaction_detail
+      transaction_hash[:details]
+    end
 
-    # def dc_transaction_detail
-    #   dc_transcation_type2? ? transaction_hash[:code] : transaction_hash[:details]
-    # end
+    def dc_transaction_detail
+      dc_transcation_type2? ? transaction_hash[:code] : transaction_hash[:details]
+    end
 
-    # def dc_transaction_type2?
-    #   transaction_hash[:details] ~= /[0-9]{4}-(\*{4}-\*{4})-[0-9]{4}/
-    # end
+    def dc_transaction_type2?
+      transaction_hash[:details] =~ /[0-9]{4}-(\*{4}-\*{4})-[0-9]{4}/
+    end
   end
 end

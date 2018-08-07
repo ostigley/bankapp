@@ -36,12 +36,6 @@ RSpec.describe Transactions::CreateTransaction do
       end
     end
 
-    describe '#transaction_detail' do
-      it 'returns the transaction detail' do
-        expect(new_transaction.transaction_detail).to eq credit_card_transaction_hash[:details]
-      end
-    end
-
     describe '#cc_transaction_detail' do
       it 'returns the transaction detail' do
         expect(new_transaction.cc_transaction_detail).to eq credit_card_transaction_hash[:details]
@@ -61,7 +55,7 @@ RSpec.describe Transactions::CreateTransaction do
     end
 
     describe '#create!' do
-      context 'unique transaction'
+      context 'unique transaction' do
         it 'adds the transaction to the database' do
           expect(new_transaction.create!).to change(Transaction.count).by(1)
         end
@@ -71,7 +65,7 @@ RSpec.describe Transactions::CreateTransaction do
         end
       end
 
-      context 'repeat transaction'
+      context 'repeat transaction' do
         before do
           new_transaction.create!
         end
@@ -85,6 +79,5 @@ RSpec.describe Transactions::CreateTransaction do
         end
       end
     end
-
   end
 end
