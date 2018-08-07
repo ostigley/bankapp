@@ -15,6 +15,21 @@ RSpec.describe Transactions::CreateTransaction do
       conversion_charge: nil
     }
   end
+
+  let(:debit_card_transaction_hash) do
+    {
+      type: 'Eft-Pos',
+      details: 'Moore Wilson S',
+      particulars: '4988********',
+      code: '9318   C',
+      reference: '180803171945',
+      amount: '-64.95',
+      date: '03/08/2018',
+      foreign_currency_amount: nil,
+      conversion_charge: nil
+    }
+  end
+
   context 'credit card' do
     let(:new_transaction) { Transactions::CreateTransaction.new(credit_card_transaction_hash) }
 
@@ -48,16 +63,16 @@ RSpec.describe Transactions::CreateTransaction do
       end
     end
 
-    describe '#transaction_hash' do
+    describe '#tx_hash' do
       it 'generates a hash of the transaction' do
-        expect(new_transaction.tranaction_hash).to_not be nil
+        expect(new_transaction.tx_hash).to_not be nil
       end
     end
 
     describe '#create!' do
       context 'unique transaction' do
         it 'adds the transaction to the database' do
-          expect(new_transaction.create!).to change(Transaction.count).by(1)
+          expect { new_transaction.create! }.to change { Transaction.count }.by(1)
         end
 
         it 'returns a Transaction object' do
@@ -71,7 +86,85 @@ RSpec.describe Transactions::CreateTransaction do
         end
 
         it 'does not add the transaction to the database' do
-          expect(new_transaction.create!).to_not change(Transaction.count)
+          expect { new_transaction.create! }.to change { Transaction.count }.by(0)
+        end
+
+        it 'returns the previous Transaction object' do
+          expect(new_transaction.create!).to be_a Transaction
+        end
+      end
+    end
+  end
+
+  context 'credit card' do
+    let(:new_transaction) { Transactions::CreateTransaction.new(debit_card_transaction_hash) }
+
+    describe '#new' do
+      it 'initialises the transaction_hash attribute' do
+        expect(new_transaction.transaction_hash).to eq debit_card_transaction_hash
+      end
+    end
+
+    describe '#credit_card_transaction?' do
+      it 'returns false' do
+        expect(new_transaction.credit_card_transaction?).to be false
+      end
+    end
+
+    describe '#transaction_detail' do
+      context 'type 1 transaction' do
+        it 'returns the transaction detail' do
+          expect(new_transaction.transaction_detail).to eq debit_card_transaction_hash[:details]
+        end
+      end
+
+      context 'type 2 transaction' do
+        it 'returns the transaction code as the detail' do
+          type2_detail = '1232-****-****-1234'
+          debit_card_transaction_hash[:details] = type2_detail
+          new_transaction = Transactions::CreateTransaction.new(debit_card_transaction_hash)
+
+          expect(new_transaction.transaction_detail).to eq debit_card_transaction_hash[:code]
+        end
+      end
+    end
+
+    describe '#dc_transaction_detail' do
+      it 'returns the transaction detail' do
+        expect(new_transaction.cc_transaction_detail).to eq debit_card_transaction_hash[:details]
+      end
+    end
+
+    describe '#transaction_date' do
+      it 'returns the transaction date' do
+        expect(new_transaction.transaction_date).to eq debit_card_transaction_hash[:date]
+      end
+    end
+
+    describe '#tx_hash' do
+      it 'generates a hash of the transaction' do
+        expect(new_transaction.tx_hash).to_not be nil
+      end
+    end
+
+    describe '#create!' do
+      context 'unique transaction' do
+        it 'adds the transaction to the database' do
+          expect { new_transaction.create! }.to change { Transaction.count }.by(1)
+        end
+
+        it 'returns a Transaction object' do
+          expect(new_transaction.create!).to be_a Transaction
+        end
+      end
+
+      context 'repeat transaction' do
+        before do
+          new_transaction.create!
+        end
+
+        it 'does not add the transaction to the database' do
+          expect { new_transaction.create! }.to change { Transaction.count }.by(0)
         end
 
         it 'returns the previous Transaction object' do

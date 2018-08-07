@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Transactions
   class CreateTransaction
     attr_reader :transaction_hash
@@ -7,7 +9,12 @@ module Transactions
     end
 
     def create!
-    # create object and save
+      Transaction.find_or_create_by(transaction_hash: tx_hash) do |transaction|
+        transaction.transaction_date = transaction_date
+        transaction.detail           = transaction_detail
+        transaction.amount           = transaction_hash[:amount]
+        transaction.transaction_hash = tx_hash
+      end
     end
 
     def credit_card_transaction?
@@ -20,16 +27,24 @@ module Transactions
       credit_card_transaction? ? cc_transaction_detail : dc_transaction_detail
     end
 
+    def transaction_date
+      credit_card_transaction? ? transaction_hash[:transaction_date] : transaction_hash[:date]
+    end
+
     def cc_transaction_detail
       transaction_hash[:details]
     end
 
     def dc_transaction_detail
-      dc_transcation_type2? ? transaction_hash[:code] : transaction_hash[:details]
+      dc_transaction_type2? ? transaction_hash[:code] : transaction_hash[:details]
     end
 
     def dc_transaction_type2?
-      transaction_hash[:details] =~ /[0-9]{4}-(\*{4}-\*{4})-[0-9]{4}/
+      transaction_hash[:details].match(/[0-9]{4}-(\*{4}-\*{4})-[0-9]{4}/).present?
+    end
+
+    def tx_hash
+      Digest::MD5.hexdigest transaction_hash.to_s
     end
   end
 end
