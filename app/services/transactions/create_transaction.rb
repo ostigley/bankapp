@@ -46,5 +46,15 @@ module Transactions
     def tx_hash
       Digest::MD5.hexdigest transaction_hash.to_s
     end
+
+    def transaction_amount
+      return transaction_hash[:amount].to_f unless credit_card_transaction?
+
+      if transaction_hash[:type] =~ /^D|Debit/
+        0 - transaction_hash[:amount].to_f
+      else
+        transaction_hash[:amount].to_f
+      end
+    end
   end
 end
