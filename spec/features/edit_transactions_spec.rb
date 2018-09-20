@@ -11,8 +11,8 @@ RSpec.feature 'EditTransactions', type: :feature, js: true do
       before do
         # transactions
         visit '/transactions/edit/1'
-        page.first('input#new_category').set 'eating out'
-        page.first('input.submit').click
+        page.find_all('input#new_category').to_a.second.set 'eating out'
+        page.find_all('input.submit').to_a.second.click
         sleep 2
       end
 
