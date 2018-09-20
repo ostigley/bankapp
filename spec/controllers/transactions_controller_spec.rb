@@ -43,12 +43,6 @@ RSpec.describe TransactionsController, type: :controller do
         expect(Transaction.first.amount).to be > 0
       end
 
-      it 'adds category Income if amount is credit or positive' do
-        post :upload, params: { file: @positive_debit_card_file }
-
-        expect(Transaction.first.category).to eq 'income'
-      end
-
       it 'collates transaction details' do
         post :upload, params: { file: @positive_debit_card_file }
         detail = 'Type: Eft-Pos, Details: Taste Of India, Code: 9318 C'

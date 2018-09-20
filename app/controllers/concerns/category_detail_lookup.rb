@@ -17,13 +17,14 @@ module CategoryDetailLookup
 
   def add_category_to_transactions
     @transactions.each do |transaction|
-      if transaction.amount.positive?
-        transaction.update_attribute(:category, 'income')
-      else
+      # let's categorise thism manually so we don't confuse transfers
+      # if transaction.amount.positive?
+      #   transaction.update_attribute(:category, 'income')
+      # else
         category = CategoryDetail.find_by(detail: transaction.detail.parameterize)
 
         transaction.update_attribute(:category, category&.category)
-      end
+      # end
     end
   end
 end
