@@ -46,14 +46,16 @@ RSpec.describe Transactions::CreateTransaction do
     end
 
     describe '#transaction_detail' do
-      it 'returns the transaction detail' do
-        expect(new_transaction.transaction_detail).to eq credit_card_transaction_hash[:details]
+      it 'returns the transaction detail stripped of exra whitespace' do
+        detail_no_whitespace = 'Eat My Lunch Mount Eden Nz '
+        expect(new_transaction.transaction_detail).to eq detail_no_whitespace
       end
     end
 
     describe '#cc_transaction_detail' do
       it 'returns the transaction detail' do
-        expect(new_transaction.cc_transaction_detail).to eq credit_card_transaction_hash[:details]
+        detail_no_whitespace = 'Eat My Lunch Mount Eden Nz '
+        expect(new_transaction.cc_transaction_detail).to eq detail_no_whitespace
       end
     end
 
@@ -96,13 +98,13 @@ RSpec.describe Transactions::CreateTransaction do
     end
 
     describe '#transaction_amount' do
-      context 'with type D' do
+      context 'with type "D"' do
         it 'returns a negative amount' do
           expect(new_transaction.transaction_amount).to eq(0 - credit_card_transaction_hash[:amount].to_f)
         end
       end
 
-      context 'with type D' do
+      context 'with type "Debit"' do
         it 'returns a negative amount' do
           credit_card_transaction_hash[:type] = 'Debit'
           new_transaction = Transactions::CreateTransaction.new(credit_card_transaction_hash)
@@ -110,7 +112,7 @@ RSpec.describe Transactions::CreateTransaction do
         end
       end
 
-      context 'with type C' do
+      context 'with type "C"' do
         it 'returns a positive amount' do
           credit_card_transaction_hash[:type] = 'C'
           expect(new_transaction.transaction_amount).to eq credit_card_transaction_hash[:amount].to_f
@@ -147,14 +149,8 @@ RSpec.describe Transactions::CreateTransaction do
           debit_card_transaction_hash[:details] = type2_detail
           new_transaction = Transactions::CreateTransaction.new(debit_card_transaction_hash)
 
-          expect(new_transaction.transaction_detail).to eq debit_card_transaction_hash[:code]
+          expect(new_transaction.transaction_detail).to eq '9318 C'
         end
-      end
-    end
-
-    describe '#dc_transaction_detail' do
-      it 'returns the transaction detail' do
-        expect(new_transaction.cc_transaction_detail).to eq debit_card_transaction_hash[:details]
       end
     end
 

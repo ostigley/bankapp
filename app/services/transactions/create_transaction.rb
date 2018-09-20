@@ -32,11 +32,12 @@ module Transactions
     end
 
     def cc_transaction_detail
-      transaction_hash[:details]
+      transaction_hash[:details].gsub(/\s+/, ' ')
     end
 
     def dc_transaction_detail
-      dc_transaction_type2? ? transaction_hash[:code] : transaction_hash[:details]
+      detail = dc_transaction_type2? ? transaction_hash[:code] : transaction_hash[:details]
+      detail.gsub(/\s+/, ' ')
     end
 
     def dc_transaction_type2?
