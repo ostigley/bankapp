@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TransactionsController < ApplicationController
-  include TransactionsFromFile
   include CategoryDetailLookup
 
   before_action :all_categories, only: :bulk_edit
@@ -10,10 +9,8 @@ class TransactionsController < ApplicationController
 
   def upload
     @file = file_params
-    @transactions = create_all_transactions #replace this with:
- 
-    # @transactions = Transactions::FromCsv.import
-    # s
+
+    @transactions = Transactions::FromCsv.import(@file)
 
     add_category_to_transactions
 
