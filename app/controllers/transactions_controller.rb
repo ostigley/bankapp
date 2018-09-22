@@ -10,7 +10,11 @@ class TransactionsController < ApplicationController
 
   def upload
     @file = file_params
-    @transactions = create_all_transactions
+    @transactions = create_all_transactions #replace this with:
+ 
+    # @transactions = Transactions::FromCsv.import
+    # s
+
     add_category_to_transactions
 
     redirect_to action: 'bulk_edit', ids: @transactions.map(&:id)
