@@ -24,24 +24,24 @@ module Transactions
       card.present? && card.match(/[0-9]{4}-(\*{4}-\*{4})-[0-9]{4}/).present?
     end
 
-    def transaction_detail
-      credit_card_transaction? ? cc_transaction_detail : dc_transaction_detail
-    end
+    # def transaction_detail
+    #   credit_card_transaction? ? cc_transaction_detail : dc_transaction_detail
+    # end
 
     def transaction_date
       credit_card_transaction? ? transaction_hash[:transaction_date] : transaction_hash[:date]
     end
 
-    def cc_transaction_detail
-      merged_details
-      # transaction_hash[:details].gsub(/\s+/, ' ')
-    end
+    # def cc_transaction_detail
+    #   merged_details
+    #   # transaction_hash[:details].gsub(/\s+/, ' ')
+    # end
 
-    def dc_transaction_detail
-      merged_details
-      # detail = dc_transaction_type2? ? transaction_hash[:code] : transaction_hash[:details]
-      # detail.gsub(/\s+/, ' ')
-    end
+    # def dc_transaction_detail
+    #   merged_details
+    #   # detail = dc_transaction_type2? ? transaction_hash[:code] : transaction_hash[:details]
+    #   # detail.gsub(/\s+/, ' ')
+    # end
 
     def dc_transaction_type2?
       # These types of transactions have meaningless content in the detail section
@@ -54,16 +54,15 @@ module Transactions
       transaction_keys.delete_if { |key| key.to_s =~ /amount|date|currency|reference/ }
     end
 
-    def merged_details
-      detail = []
+    def transaction_detail
+      details = []
       detail_keys.each do |key|
         # next if has card details(****) or is blank
         next if transaction_hash[key].blank? || transaction_hash[key] =~ /[*]{4}/
-
-        detail << [key.capitalize, transaction_hash[key]].join(': ')
+        details << [key.capitalize, transaction_hash[key]].join(': ')
       end
 
-      detail.join(', ').gsub(/\s+/, ' ')
+      details.join(', ').gsub(/\s+/, ' ')
     end
 
     def tx_hash

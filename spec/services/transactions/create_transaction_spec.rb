@@ -67,13 +67,6 @@ RSpec.describe Transactions::CreateTransaction do
       end
     end
 
-    describe '#cc_transaction_detail' do
-      it 'returns the transaction detail' do
-        detail_no_whitespace = 'Type: D, Details: Coffee Supreme Limited Wellington Nz '
-        expect(new_transaction.cc_transaction_detail).to eq detail_no_whitespace
-      end
-    end
-
     describe '#transaction_date' do
       it 'returns the transaction date' do
         expect(new_transaction.transaction_date).to eq credit_card_transaction_hash[:transaction_date]

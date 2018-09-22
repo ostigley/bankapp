@@ -20,6 +20,5 @@ module Transactions
     def self.convert_hash_keys(hash)
       Hash[hash.map { |k, v| [k.to_s.underscore.to_sym, v] }]
     end
-
   end
 end
