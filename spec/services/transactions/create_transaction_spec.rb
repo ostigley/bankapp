@@ -5,26 +5,41 @@ require 'rails_helper'
 RSpec.describe Transactions::CreateTransaction do
   let(:credit_card_transaction_hash) do
     {
-      card: '4988-****-****-9318',
+      card: '1234-****-****-1234',
       type: 'D',
-      amount: '12.95',
-      details: 'Eat My Lunch           Mount Eden    Nz ',
-      transaction_date: '03/08/2018',
-      processed_date: '03/08/2018',
+      amount: '4.00',
+      details: 'Coffee Supreme Limited Wellington    Nz ',
+      transaction_date: '01/05/2018',
+      processed_date: '02/05/2018',
       foreign_currency_amount: nil,
       conversion_charge: nil
     }
   end
 
-  let(:debit_card_transaction_hash) do
+  let(:debit_card_transaction_hash_type1) do
     {
       type: 'Eft-Pos',
-      details: 'Moore Wilson S',
-      particulars: '4988********',
+      details: 'Taste Of India',
+      particulars: '1234********',
       code: '9318   C',
-      reference: '180803171945',
-      amount: '-64.95',
-      date: '03/08/2018',
+      reference: '111111111111',
+      amount: '-11.11',
+      date: '30/04/2018',
+      foreign_currency_amount: nil,
+      conversion_charge: nil
+    }
+  end
+
+  let(:debit_card_transaction_hash_type2) do
+    # these transactions have a card number in the detail field
+    {
+      type: 'Visa Purchase',
+      details: '1234-****-****-1234',
+      particulars: nil,
+      code: 'Uber   *Trip',
+      reference: nil,
+      amount: '-6.50',
+      date: '23/07/2018',
       foreign_currency_amount: nil,
       conversion_charge: nil
     }
@@ -47,14 +62,14 @@ RSpec.describe Transactions::CreateTransaction do
 
     describe '#transaction_detail' do
       it 'returns the transaction detail stripped of exra whitespace' do
-        detail_no_whitespace = 'Eat My Lunch Mount Eden Nz '
+        detail_no_whitespace = 'Type: D, Details: Coffee Supreme Limited Wellington Nz '
         expect(new_transaction.transaction_detail).to eq detail_no_whitespace
       end
     end
 
     describe '#cc_transaction_detail' do
       it 'returns the transaction detail' do
-        detail_no_whitespace = 'Eat My Lunch Mount Eden Nz '
+        detail_no_whitespace = 'Type: D, Details: Coffee Supreme Limited Wellington Nz '
         expect(new_transaction.cc_transaction_detail).to eq detail_no_whitespace
       end
     end
@@ -101,6 +116,7 @@ RSpec.describe Transactions::CreateTransaction do
       context 'with type "D"' do
         it 'returns a negative amount' do
           expect(new_transaction.transaction_amount).to eq(0 - credit_card_transaction_hash[:amount].to_f)
+          expect(new_transaction.transaction_amount).to be < 0
         end
       end
 
@@ -122,11 +138,15 @@ RSpec.describe Transactions::CreateTransaction do
   end
 
   context 'debit card' do
-    let(:new_transaction) { Transactions::CreateTransaction.new(debit_card_transaction_hash) }
+    let(:new_transaction) { Transactions::CreateTransaction.new(debit_card_transaction_hash_type1) }
 
     describe '#new' do
       it 'initialises the transaction_hash attribute' do
-        expect(new_transaction.transaction_hash).to eq debit_card_transaction_hash
+        expect(new_transaction.transaction_hash).to eq debit_card_transaction_hash_type1
+      end
+
+      it 'initialises the transaction_keys attribute' do
+        expect(new_transaction.transaction_keys).to eq debit_card_transaction_hash_type1.keys
       end
     end
 
@@ -139,24 +159,23 @@ RSpec.describe Transactions::CreateTransaction do
     describe '#transaction_detail' do
       context 'type 1 transaction' do
         it 'returns the transaction detail' do
-          expect(new_transaction.transaction_detail).to eq debit_card_transaction_hash[:details]
+          detail = 'Type: Eft-Pos, Details: Taste Of India, Code: 9318 C'
+          expect(new_transaction.transaction_detail).to eq detail
         end
       end
 
       context 'type 2 transaction' do
         it 'returns the transaction code as the detail' do
-          type2_detail = '1232-****-****-1234'
-          debit_card_transaction_hash[:details] = type2_detail
-          new_transaction = Transactions::CreateTransaction.new(debit_card_transaction_hash)
+          new_transaction = Transactions::CreateTransaction.new(debit_card_transaction_hash_type2)
 
-          expect(new_transaction.transaction_detail).to eq '9318 C'
+          expect(new_transaction.transaction_detail).to eq 'Type: Visa Purchase, Code: Uber *Trip'
         end
       end
     end
 
     describe '#transaction_date' do
       it 'returns the transaction date' do
-        expect(new_transaction.transaction_date).to eq debit_card_transaction_hash[:date]
+        expect(new_transaction.transaction_date).to eq debit_card_transaction_hash_type1[:date]
       end
     end
 
@@ -168,7 +187,7 @@ RSpec.describe Transactions::CreateTransaction do
 
     describe '#transaction_amount' do
       it 'returns the amount' do
-        expect(new_transaction.transaction_amount).to eq(debit_card_transaction_hash[:amount].to_f)
+        expect(new_transaction.transaction_amount).to eq(debit_card_transaction_hash_type1[:amount].to_f)
       end
     end
 

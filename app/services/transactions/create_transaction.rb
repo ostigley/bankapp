@@ -2,17 +2,18 @@
 
 module Transactions
   class CreateTransaction
-    attr_reader :transaction_hash
+    attr_reader :transaction_hash, :transaction_keys
 
     def initialize(transaction_hash)
       @transaction_hash = transaction_hash
+      @transaction_keys = transaction_hash.keys
     end
 
     def create!
       Transaction.find_or_create_by(transaction_hash: tx_hash) do |transaction|
         transaction.transaction_date = transaction_date
         transaction.detail           = transaction_detail
-        transaction.amount           = transaction_hash[:amount]
+        transaction.amount           = transaction_amount
         transaction.transaction_hash = tx_hash
       end
     end
@@ -32,16 +33,37 @@ module Transactions
     end
 
     def cc_transaction_detail
-      transaction_hash[:details].gsub(/\s+/, ' ')
+      merged_details
+      # transaction_hash[:details].gsub(/\s+/, ' ')
     end
 
     def dc_transaction_detail
-      detail = dc_transaction_type2? ? transaction_hash[:code] : transaction_hash[:details]
-      detail.gsub(/\s+/, ' ')
+      merged_details
+      # detail = dc_transaction_type2? ? transaction_hash[:code] : transaction_hash[:details]
+      # detail.gsub(/\s+/, ' ')
     end
 
     def dc_transaction_type2?
+      # These types of transactions have meaningless content in the detail section
+      # so we check and use something else if that is the case.
       transaction_hash[:details].match(/[0-9]{4}-(\*{4}-\*{4})-[0-9]{4}/).present?
+    end
+
+    def detail_keys
+      # skip keys that have these details to keep the detail simple
+      transaction_keys.delete_if { |key| key.to_s =~ /amount|date|currency|reference/ }
+    end
+
+    def merged_details
+      detail = []
+      detail_keys.each do |key|
+        # next if has card details(****) or is blank
+        next if transaction_hash[key].blank? || transaction_hash[key] =~ /[*]{4}/
+
+        detail << [key.capitalize, transaction_hash[key]].join(': ')
+      end
+
+      detail.join(', ').gsub(/\s+/, ' ')
     end
 
     def tx_hash
