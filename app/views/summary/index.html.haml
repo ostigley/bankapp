@@ -8,3 +8,7 @@
   .tx_summary_table
     %h1 All time spending habits
     = render partial: 'transaction_summary_table', locals: { transactions: @transactions }
+
+%svg{:height => "500", :width => "960"}
+%script{:src => "https://d3js.org/d3.v4.min.js"}
+= javascript_include_tag 'summary'
