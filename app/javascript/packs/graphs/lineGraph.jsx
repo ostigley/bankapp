@@ -26,7 +26,7 @@ export default class LineGraph extends React.Component {
     .range([height - margin.bottom, margin.top]);
     const xAxis = g => g
     .attr("transform", `translate(0,${y(0)})`)
-    .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0));
+    .call(d3.axisBottom(x).ticks(width / 24).tickSizeOuter(0));
     const yAxis = g => g
     .attr("transform", `translate(${margin.left},0)`)
     .call(d3.axisLeft(y).ticks(8, "$.0f"))
