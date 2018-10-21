@@ -36,7 +36,7 @@ class GrowthTrends
   end
 
   def generate_monthly_expenditure
-    # total outgoings (sum amounts excluding shares and income)
+    # total outgoings (sum transaction amounts excluding shares and income)
     @month_ranges.map do |month_range|
       {
         date:  month_range.first.strftime('%Y-%m-%d'),
@@ -47,6 +47,7 @@ class GrowthTrends
 
   def generate_monthly_sum_all
     # Generate an array of month ranges with total transactions for those ranges
+    # IE left over each month
     @month_ranges.map do |month_range|
       {
         date:  month_range.first.strftime('%Y-%m-%d'),
