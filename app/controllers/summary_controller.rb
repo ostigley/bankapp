@@ -8,7 +8,7 @@ class SummaryController < ApplicationController
     @transactions_30_days = Transaction.last_30_days
     @transactions_3_months = Transaction.last_3_months
 
-    growth_trends = GrowthTrends.new.generate
+    @growth_trends = GrowthTrends.new.generate
   end
 
   def show
