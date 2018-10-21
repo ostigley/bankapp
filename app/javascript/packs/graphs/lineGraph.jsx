@@ -22,10 +22,10 @@ export default class LineGraph extends React.Component {
     .domain(d3.extent(data, d => d.date))
     .range([margin.left, width - margin.right]);
     const y = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.value)]).nice()
+    .domain([d3.min(data, d => d.value), d3.max(data, d => d.value)]).nice()
     .range([height - margin.bottom, margin.top]);
     const xAxis = g => g
-    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .attr("transform", `translate(0,${y(0)})`)
     .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0));
     const yAxis = g => g
     .attr("transform", `translate(${margin.left},0)`)
@@ -67,6 +67,7 @@ export default class LineGraph extends React.Component {
     return (
       <div>
         <h2>{this.props.chartName}</h2>
+        <p>{this.props.description}</p>
         <svg height="500" width="960" id={`svg_${chartName.replace(/\s/g,'-')}`}></svg>
       </div>
     );
