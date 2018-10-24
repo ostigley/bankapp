@@ -12,11 +12,11 @@ module Transactions
 
     def start
       session = Capybara::Session.new(:chrome)
-      session.visit(ENV['url'])
+      session.visit(ENV['URL'])
       sleep(5)
-      session.find('input#user-id').set(ENV['id'])
+      session.find('input#user-id').set(ENV['ID'])
       sleep(5)
-      session.find('input#password').set(ENV['password'])
+      session.find('input#password').set(ENV['PASSWORD'])
       sleep(5)
       session.find('button#submit').click
       sleep(5)
