@@ -46,5 +46,6 @@ bower.json
 /node_modules
 yarn-debug.log*
 .yarn-integrity
-public/packs/manifest.json
-public/packs/manifest.json
+public/packs/*
+public/packs/*
+public/packs/*
