@@ -2,6 +2,8 @@
 
 module Transactions
   class Fetch
+    DOWNLOAD_PATH = ENV['DOWNLOAD_PATH']
+
     def initialize
       Capybara.register_driver :chrome do |app|
         Capybara::Selenium::Driver.new(app, :browser => :chrome)
@@ -45,6 +47,27 @@ module Transactions
       sleep(5)
       session.find('button#transaction-export-submit').click
       sleep(5)
+
+      import
+    end
+
+    def import
+      Dir["#{DOWNLOAD_PATH}*.csv"].each do |file_name|
+        csv = File.open file_name
+
+        Transactions::FromCsv.import(csv)
+      end
+
+      Transaction.where(category: nil).each do |transaction|
+        # let's categorise thism manually so we don't confuse transfers
+        # if transaction.amount.positive?
+        #   transaction.update_attribute(:category, 'income')
+        # else
+        category = CategoryDetail.find_by(detail: transaction.detail.parameterize)
+
+        transaction.update_attribute(:category, category&.category)
+      end
+      # TODO delete files
     end
   end
 end
