@@ -1,13 +1,13 @@
 .tx_summary_tables
   .tx_summary_table
+    %h1 Current Month
+    = render partial: 'transaction_summary_table', locals: { transactions: @transactions_current_month, period: nil }
+  .tx_summary_table
     %h1 Last 30 days
-    = render partial: 'transaction_summary_table', locals: { transactions: @transactions_30_days }
+    = render partial: 'transaction_summary_table', locals: { transactions: @transactions_30_days, period: 1 }
   .tx_summary_table
-    %h1 Last 3 months
-    = render partial: 'transaction_summary_table', locals: { transactions: @transactions_3_months }
-  .tx_summary_table
-    %h1 All time spending habits
-    = render partial: 'transaction_summary_table', locals: { transactions: @transactions }
+    %h1 Last 12 months
+    = render partial: 'transaction_summary_table', locals: { transactions: @transactions_12_months, period: 12 }
 
 #props{"data-props" => @growth_trends.to_json}
 = javascript_pack_tag('summary')

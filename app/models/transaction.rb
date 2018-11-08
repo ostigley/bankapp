@@ -17,4 +17,13 @@ class Transaction < ApplicationRecord
   def self.last_3_months
     where(transaction_date: (Time.zone.now.to_date - 3.months)..Time.zone.now.to_date)
   end
+
+  def self.last_12_months
+    where(transaction_date: (Time.zone.now.to_date - 12.months)..Time.zone.now.to_date)
+  end
+
+  def self.current_month
+    where(transaction_date: (Time.zone.now.beginning_of_month.to_date)..Time.zone.now.to_date)
+  end
+
 end

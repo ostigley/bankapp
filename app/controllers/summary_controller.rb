@@ -4,9 +4,9 @@ class SummaryController < ApplicationController
   before_action :categories, except: :category
 
   def index
-    @transactions = Transaction.all
+    @transactions_12_months = Transaction.last_12_months
     @transactions_30_days = Transaction.last_30_days
-    @transactions_3_months = Transaction.last_3_months
+    @transactions_current_month = Transaction.current_month
 
     @growth_trends = GrowthTrends.new.generate
   end
