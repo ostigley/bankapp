@@ -2,6 +2,9 @@
 
 class Transaction < ApplicationRecord
   validates :transaction_date, :amount, :detail, presence: true
+  scope :sum_month_category, ->(category, date) {
+    where(category: category, transaction_date: date.beginning_of_month...date.end_of_month).sum(:amount)
+  }
 
   scope :find_category_date, ->(params) {
     category = params[:category]

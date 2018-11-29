@@ -1,6 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe Transaction, type: :model do
+  describe 'scope sum_month_category' do
+    let!(:transactions) { create_list(:transaction, 2, {
+      category: 'eating_out',
+      amount: 10.00,
+      transaction_date: Time.zone.now.to_date
+    })
+   }
+
+    it 'sums the total transactions for that month in that category' do
+      expect(Transaction.sum_month_category('eating_out', Time.zone.now.to_date)).to eq 20.00
+    end
+  end
 
   describe 'scope category_to_day_in_month' do
     let!(:transactions_month_1) do
