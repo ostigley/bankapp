@@ -49,3 +49,4 @@ yarn-debug.log*
 public/packs/*
 public/packs/*
 public/packs/*
+public/packs/manifest.json

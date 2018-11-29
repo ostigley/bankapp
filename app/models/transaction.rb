@@ -10,6 +10,12 @@ class Transaction < ApplicationRecord
     where(category: category, transaction_date: start_date..end_date).order(transaction_date: :asc)
   }
 
+  scope :category_to_day_in_month, ->(category, day) {
+    where(category: category).select do |transaction|
+      transaction.transaction_date.day <= day
+    end
+  }
+
   def self.last_30_days
     where(transaction_date: (Time.zone.now.to_date - 30.days)..Time.zone.now.to_date)
   end
