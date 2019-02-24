@@ -25,7 +25,7 @@ class GrowthTrends
     result = []
     # Create an arrah of month ranges, for the last two years
     24.times do |n|
-      month = Time.zone.now.to_date - (n).month
+      month = Time.zone.now.to_date - (n + 1).month
       first_day = month - month.day + 1.day
       last_day = first_day + 1.month - 1.day
       range = first_day..last_day
