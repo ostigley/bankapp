@@ -47,7 +47,7 @@ class GrowthTrends
 
   def generate_monthly_sum_all
     # Generate an array of month ranges with total transactions for those ranges
-    # IE left over each month
+    # IE left over each month (because it includes income)
     @month_ranges.map do |month_range|
       {
         date:  month_range.first.strftime('%Y-%m-%d'),
