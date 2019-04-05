@@ -34,5 +34,4 @@ class Transaction < ApplicationRecord
   def self.current_month
     where(transaction_date: (Time.zone.now.beginning_of_month.to_date)..Time.zone.now.to_date)
   end
-
 end

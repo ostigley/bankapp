@@ -74,3 +74,5 @@ Rails/UnknownEnv:
     - aws_uat
 Style/Documentation:
   Enabled: false
+Style/Lambda:
+  Enabled: false

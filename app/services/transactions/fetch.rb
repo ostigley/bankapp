@@ -6,7 +6,7 @@ module Transactions
 
     def initialize
       Capybara.register_driver :chrome do |app|
-        Capybara::Selenium::Driver.new(app, :browser => :chrome)
+        Capybara::Selenium::Driver.new(app, browser: :chrome)
       end
 
       Capybara.javascript_driver = :chrome
@@ -67,7 +67,7 @@ module Transactions
 
         transaction.update_attribute(:category, category&.category)
       end
-      # TODO delete files
+      # TODO: delete files
     end
   end
 end
