@@ -12,12 +12,12 @@ module DateHash
   end
 
   # adds a day key to a hash, until today's day
-  def self.days(date, current_hash = {})
+  def self.days(date, current_hash = {}, end_date = Time.zone.now.strftime('%A %d') )
     next_date = date.strftime('%A %d')
     current_hash[next_date] = []
 
-    return current_hash if next_date == Time.zone.now.strftime('%A %d')
+    return current_hash if next_date == end_date.strftime('%A %d')
 
-    days(date + 1.day, current_hash)
+    days(date + 1.day, current_hash, end_date)
   end
 end
