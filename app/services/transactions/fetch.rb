@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Transactions
   class Fetch
     DOWNLOAD_PATH = ENV['DOWNLOAD_PATH']
@@ -52,7 +51,7 @@ module Transactions
     end
 
     def import
-      Dir["#{DOWNLOAD_PATH}*.csv"].each do |file_name|
+      Dir["#{ENV['DOWNLOAD_PATH']}*.csv"].each do |file_name|
         csv = File.open file_name
 
         Transactions::FromCsv.import(csv)

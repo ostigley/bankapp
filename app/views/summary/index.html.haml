@@ -3,8 +3,8 @@
     %h1 Current Month
     = render partial: 'transaction_summary_table', locals: { transactions: @transactions_current_month, period: nil }
   .tx_summary_table
-    %h1 Last 30 days
-    = render partial: 'transaction_summary_table', locals: { transactions: @transactions_30_days, period: 1 }
+    %h1 Last 3 months
+    = render partial: 'transaction_summary_table', locals: { transactions: @transactions_3_months, period: 3 }
   .tx_summary_table
     %h1 Last 12 months
     = render partial: 'transaction_summary_table', locals: { transactions: @transactions_12_months, period: 12 }

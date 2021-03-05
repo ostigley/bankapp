@@ -23,9 +23,9 @@ class GrowthTrends
 
   def generate_month_ranges
     result = []
-    # Create an arrah of month ranges, for the last two years
-    24.times do |n|
-      month = Time.zone.now.to_date - (n + 1).month
+    # Create an array of month ranges, for the last two years
+    12.times do |n|
+      month = Time.zone.now.to_date - (n).month
       first_day = month - month.day + 1.day
       last_day = first_day + 1.month - 1.day
       range = first_day..last_day
@@ -47,7 +47,7 @@ class GrowthTrends
 
   def generate_monthly_sum_all
     # Generate an array of month ranges with total transactions for those ranges
-    # IE left over each month (because it includes income)
+    # IE left over each month (because it includes income, which is a positive amount)
     @month_ranges.map do |month_range|
       {
         date:  month_range.first.strftime('%Y-%m-%d'),
