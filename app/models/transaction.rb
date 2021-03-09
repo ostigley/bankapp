@@ -2,6 +2,7 @@
 
 class Transaction < ApplicationRecord
   validates :transaction_date, :amount, :detail, presence: true
+  default_scope { where("transaction_date > ?", Date.new(2020,11,21)) }
   scope :sum_month_category, ->(category, date) {
     where(category: category, transaction_date: date.beginning_of_month...date.end_of_month).sum(:amount)
   }
