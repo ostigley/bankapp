@@ -1,3 +1,4 @@
+- ignore = ['transfer', 'income', 'rent', 'shares', 'go-savings', 'credit-card-payment']
 %table
   %th Category
   %th %
@@ -6,7 +7,7 @@
     = period ? 'Average $' : 'Projected $'
 
   - @categories.each do |category|
-    - # next if category == 'transfer'
+    - next if ignore.include? category
     %tr
       %td
         = link_to category, "/category/#{category}"
