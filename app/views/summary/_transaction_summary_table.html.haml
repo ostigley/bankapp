@@ -5,9 +5,10 @@
   %th Amount $
   %th
     = period ? 'Average $' : 'Projected $'
-
+  - total = 0
   - @categories.each do |category|
     - next if ignore.include? category
+    - (total += sum_category(category, transactions) / period) if period
     %tr
       %td
         = link_to category, "/category/#{category}"
@@ -20,3 +21,10 @@
           = sum_category(category, transactions) / period
         - else
           = sum_category(category, transactions) * percentage_days_remaining
+
+  %tr
+    %td total
+    %td
+    %td
+    %td
+      = total
